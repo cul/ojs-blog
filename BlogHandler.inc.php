@@ -14,7 +14,7 @@
 
 import('classes.handler.Handler');
 
-class blogHandler extends Handler {
+class BlogHandler extends Handler {
 	/** @var blogPlugin The static pages plugin */
 	static $plugin;
 

@@ -1,5 +1,9 @@
 {**
- * templates/editStaticPageForm.tpl
+ * templates/editBlogForm.tpl
+ *
+ * Copyright (c) 2014-2019 Simon Fraser University
+ * Copyright (c) 2003-2019 John Willinsky
+ * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
  * Form for editing a static page
  *}
@@ -26,10 +30,6 @@
 		{fbvFormSection}
 			{fbvElement type="text" label="plugins.generic.blog.path" id="path" value=$path maxlength="40" inline=true size=$fbvStyles.size.MEDIUM}
 			{fbvElement type="text" label="plugins.generic.blog.pageTitle" id="title" value=$title maxlength="255" inline=true multilingual=true size=$fbvStyles.size.MEDIUM}
-		{/fbvFormSection}
-		{fbvFormSection}
-			{capture assign="exampleUrl"}{url|replace:"REPLACEME":"%PATH%" router=$smarty.const.ROUTE_PAGE context=$currentContext->getPath() page="REPLACEME"}{/capture}
-			{translate key="plugins.generic.blog.viewInstructions" pagesPath=$exampleUrl}
 		{/fbvFormSection}
 		{fbvFormSection label="plugins.generic.blog.content" for="content"}
 			{fbvElement type="textarea" multilingual=true name="content" id="content" value=$content rich=true height=$fbvStyles.height.TALL variables=$allowedVariables}

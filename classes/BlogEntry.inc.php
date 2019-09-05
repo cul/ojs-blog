@@ -1,18 +1,15 @@
 <?php
 
 /**
- * @file classes/StaticPage.inc.php
+ * @file classes/BlogEntry.inc.php
  *
- * Copyright (c) 2014-2019 Simon Fraser University
- * Copyright (c) 2003-2019 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
  * @package plugins.generic.blog
- * @class StaticPage
- * Data object representing a static page.
+ * @class BlogEntry
+ * Data object representing a blog entry.
  */
 
-class StaticPage extends DataObject {
+class BlogEntry extends DataObject {
 
 	//
 	// Get/set methods
@@ -36,7 +33,7 @@ class StaticPage extends DataObject {
 
 
 	/**
-	 * Set page title
+	 * Set entry title
 	 * @param string string
 	 * @param locale
 	 */
@@ -45,7 +42,7 @@ class StaticPage extends DataObject {
 	}
 
 	/**
-	 * Get page title
+	 * Get entry title
 	 * @param locale
 	 * @return string
 	 */
@@ -54,7 +51,7 @@ class StaticPage extends DataObject {
 	}
 
 	/**
-	 * Get Localized page title
+	 * Get Localized entry title
 	 * @return string
 	 */
 	function getLocalizedTitle() {
@@ -62,7 +59,7 @@ class StaticPage extends DataObject {
 	}
 
 	/**
-	 * Set page content
+	 * Set entry content
 	 * @param $content string
 	 * @param locale
 	 */
@@ -71,7 +68,7 @@ class StaticPage extends DataObject {
 	}
 
 	/**
-	 * Get page content
+	 * Get entry content
 	 * @param locale
 	 * @return string
 	 */
@@ -83,24 +80,35 @@ class StaticPage extends DataObject {
 	 * Get "localized" content
 	 * @return string
 	 */
-	function getLocalizedContent() {
+	function getEntryContent() {
 		return $this->getLocalizedData('content');
 	}
 
+
 	/**
-	 * Get page path string
-	 * @return string
+	 * Get blog entry posted date.
+	 * @return date (YYYY-MM-DD)
 	 */
-	function getPath() {
-		return $this->getData('path');
+	function getDatePosted() {
+		return date('Y-m-d', strtotime($this->getData('datePosted')));
 	}
 
-	 /**
-	  * Set page path string
-	  * @param $path string
-	  */
-	function setPath($path) {
-		return $this->setData('path', $path);
+	/**
+	 * Set blog entry posted date.
+	 * @param $datePosted date (YYYY-MM-DD)
+	 */
+	function setDatePosted($datePosted) {
+		$this->setData('datePosted', $datePosted);
 	}
+
+
+	/**
+	 * Get "localized" content
+	 * @return string
+	 */
+	function getLocalizedContent() {
+		return $this->getLocalizedData('content');
+	}		
+
 }
 

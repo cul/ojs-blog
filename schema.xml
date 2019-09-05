@@ -4,41 +4,34 @@
 <!--
   * schema.xml
   *
-  * Copyright (c) 2014-2019 Simon Fraser University
-  * Copyright (c) 2003-2019 John Willinsky
-  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
-  *
-  * Static pages plugin schema in XML.
+  * Blog plugin schema in XML.
   *
   -->
 
-<schema version="0.2">
+<schema version="0.3">
 	<!--
 	 *
-	 * TABLE static_pages
+	 * TABLE blog
 	 *
 	 -->
-	<table name="static_pages">
-		<field name="static_page_id" type="I8">
+	<table name="blog">
+		<field name="blog_id" type="I8">
 			<KEY/>
 			<AUTOINCREMENT/>
-		</field>
-		<field name="path" type="C2" size="255">
-			<NOTNULL/>
 		</field>
 		<field name="context_id" type="I8">
 			<NOTNULL/>
 		</field>
-		<descr>List of static pages for each context</descr>
+		<descr>blog by context</descr>
 	</table>
 
 	<!--
 	  *
-	  * TABLE static_page_settings
+	  * TABLE blog_settings
 	  *
 	  -->
-	<table name="static_page_settings">
-		<field name="static_page_id" type="I8">
+	<table name="blog_settings">
+		<field name="blog_id" type="I8">
 			<NOTNULL/>
 		</field>
 		<field name="locale" type="C2" size="14">
@@ -53,12 +46,12 @@
 			<NOTNULL/>
 			<descr>(bool|int|float|string|object)</descr>
 		</field>
-		<descr>Static Page settings.</descr>
-		<index name="static_page_settings_static_page_id">
-			<col>static_page_id</col>
+		<descr>Blog settings.</descr>
+		<index name="blog_settings_blog_id">
+			<col>blog_id</col>
 		</index>
-		<index name="static_page_settings_pkey">
-			<col>static_page_id</col>
+		<index name="blog_settings_pkey">
+			<col>blog_id</col>
 			<col>locale</col>
 			<col>setting_name</col>
 			<UNIQUE />

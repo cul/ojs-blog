@@ -65,8 +65,8 @@ class StaticPageGridHandler extends GridHandler {
 		$this->setEmptyRowText('plugins.generic.blog.noneCreated');
 
 		// Get the pages and add the data to the grid
-		$blogDao = DAORegistry::getDAO('blogDAO');
-		$this->setGridDataElements($blogDao->getByContextId($context->getId()));
+		$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
+		$this->setGridDataElements($blogEntryDao->getByContextId($context->getId()));
 
 		// Add grid-level actions
 		$router = $request->getRouter();
@@ -196,9 +196,9 @@ class StaticPageGridHandler extends GridHandler {
 		$context = $request->getContext();
 
 		// Delete the static page
-		$blogDao = DAORegistry::getDAO('blogDAO');
-		$staticPage = $blogDao->getById($staticPageId, $context->getId());
-		$blogDao->deleteObject($staticPage);
+		$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
+		$staticPage = $blogEntryDao->getById($staticPageId, $context->getId());
+		$blogEntryDao->deleteObject($staticPage);
 
 		return DAO::getDataChangedEvent();
 	}

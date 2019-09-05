@@ -33,7 +33,7 @@ class StaticPageForm extends Form {
 	 * @param $staticPageId int Static page ID (if any)
 	 */
 	function __construct($blogPlugin, $contextId, $staticPageId = null) {
-		parent::__construct($blogPlugin->getTemplateResource('editStaticPageForm.tpl'));
+		parent::__construct($blogPlugin->getTemplateResource('editBlogForm.tpl'));
 
 		$this->contextId = $contextId;
 		$this->staticPageId = $staticPageId;
@@ -46,8 +46,8 @@ class StaticPageForm extends Form {
 		$this->addCheck(new FormValidatorRegExp($this, 'path', 'required', 'plugins.generic.blog.pathRegEx', '/^[a-zA-Z0-9\/._-]+$/'));
 		$form = $this;
 		$this->addCheck(new FormValidatorCustom($this, 'path', 'required', 'plugins.generic.blog.duplicatePath', function($path) use ($form) {
-			$blogDao = DAORegistry::getDAO('blogDAO');
-			$page = $blogDao->getByPath($form->contextId, $path);
+			$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
+			$page = $blogEntryDao->getById($form->contextId);
 			return !$page || $page->getId()==$form->staticPageId;
 		}));
 	}
@@ -58,8 +58,8 @@ class StaticPageForm extends Form {
 	function initData() {
 		$templateMgr = TemplateManager::getManager();
 		if ($this->staticPageId) {
-			$blogDao = DAORegistry::getDAO('blogDAO');
-			$staticPage = $blogDao->getById($this->staticPageId, $this->contextId);
+			$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
+			$staticPage = $blogEntryDao->getById($this->staticPageId, $this->contextId);
 			$this->setData('path', $staticPage->getPath());
 			$this->setData('title', $staticPage->getTitle(null)); // Localized
 			$this->setData('content', $staticPage->getContent(null)); // Localized
@@ -99,13 +99,13 @@ class StaticPageForm extends Form {
 	 * Save form values into the database
 	 */
 	function execute() {
-		$blogDao = DAORegistry::getDAO('blogDAO');
+		$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
 		if ($this->staticPageId) {
 			// Load and update an existing page
-			$staticPage = $blogDao->getById($this->staticPageId, $this->contextId);
+			$staticPage = $blogEntryDao->getById($this->staticPageId, $this->contextId);
 		} else {
 			// Create a new static page
-			$staticPage = $blogDao->newDataObject();
+			$staticPage = $blogEntryDao->newDataObject();
 			$staticPage->setContextId($this->contextId);
 		}
 
@@ -114,9 +114,9 @@ class StaticPageForm extends Form {
 		$staticPage->setContent($this->getData('content'), null); // Localized
 
 		if ($this->staticPageId) {
-			$blogDao->updateObject($staticPage);
+			$blogEntryDao->updateObject($staticPage);
 		} else {
-			$blogDao->insertObject($staticPage);
+			$blogEntryDao->insertObject($staticPage);
 		}
 	}
 }

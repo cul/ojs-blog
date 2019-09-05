@@ -14,7 +14,7 @@
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 
-class blogPlugin extends GenericPlugin {
+class BlogPlugin extends GenericPlugin {
 	/**
 	 * @copydoc Plugin::getDisplayName()
 	 */
@@ -49,15 +49,15 @@ class blogPlugin extends GenericPlugin {
 		if (parent::register($category, $path, $mainContextId)) {
 			if ($this->getEnabled($mainContextId)) {
 				// Register the static pages DAO.
-				import('plugins.generic.blog.classes.blogDAO');
-				$blogDao = new blogDAO();
-				DAORegistry::registerDAO('blogDAO', $blogDao);
+				import('plugins.generic.blog.classes.blogEntryDAO');
+				$blogEntryDao = new blogEntryDAO();
+				DAORegistry::registerDAO('blogEntryDAO', $blogEntryDao);
 
 				HookRegistry::register('Template::Settings::website', array($this, 'callbackShowWebsiteSettingsTabs'));
 
 				// Intercept the LoadHandler hook to present
 				// static pages when requested.
-				HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
+				// HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
 
 				// Register the components this plugin implements to
 				// permit administration of static pages.
@@ -87,7 +87,7 @@ class blogPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Declare the handler function to process the actual page PATH
+	 * Declare the handler function to process the actual entry
 	 * @param $hookName string The name of the invoked hook
 	 * @param $args array Hook parameters
 	 * @return boolean Hook handling status
@@ -99,44 +99,21 @@ class blogPlugin extends GenericPlugin {
 		$page =& $args[0];
 		$op =& $args[1];
 
-		$blogDao = DAORegistry::getDAO('blogDAO');
-		if ($page == 'pages' && $op == 'preview') {
-			// This is a preview request; mock up a static page to display.
-			// The handler class ensures that only managers and administrators
-			// can do this.
-			$staticPage = $blogDao->newDataObject();
-			$staticPage->setContent((array) $request->getUserVar('content'), null);
-			$staticPage->setTitle((array) $request->getUserVar('title'), null);
-		} else {
-			// Construct a path to look for
-			$path = $page;
-			if ($op !== 'index') $path .= "/$op";
-			if ($ops = $request->getRequestedArgs()) $path .= '/' . implode('/', $ops);
+		$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
+		$staticPage = $blogEntryDao->newDataObject();
 
-			// Look for a static page with the given path
-			$context = $request->getContext();
-			$staticPage = $blogDao->getByPath(
-				$context?$context->getId():CONTEXT_ID_NONE,
-				$path
-			);
-		}
+		// Trick the handler into dealing with it normally
+		$page = 'pages';
+		$op = 'view';
 
-		// Check if this is a request for a static page or preview.
-		if ($staticPage) {
-			// Trick the handler into dealing with it normally
-			$page = 'pages';
-			$op = 'view';
+		// It is -- attach the static pages handler.
+		define('HANDLER_CLASS', 'blogHandler');
+		$this->import('blogHandler');
 
-			// It is -- attach the static pages handler.
-			define('HANDLER_CLASS', 'blogHandler');
-			$this->import('blogHandler');
-
-			// Allow the static pages page handler to get the plugin object
-			blogHandler::setPlugin($this);
-			blogHandler::setPage($staticPage);
-			return true;
-		}
-		return false;
+		// Allow the static pages page handler to get the plugin object
+		blogHandler::setPlugin($this);
+		blogHandler::setPage($staticPage);
+		return true;
 	}
 
 	/**
