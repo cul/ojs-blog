@@ -57,16 +57,16 @@ class blogEntryDAO extends DAO {
 	 */
 	function insertObject($blogEntry) {
 		$this->update(
-			'INSERT INTO blog (context_id) VALUES (?)',
+			'INSERT INTO blog_entries (context_id) VALUES (?)',
 			array(
-				(int) $blog->getContextId()
+				(int) $blogEntry->getContextId()
 			)
 		);
 
-		$blog->setId($this->getInsertId());
-		$this->updateLocaleFields($blog);
+		$blogEntry->setId($this->getInsertId());
+		$this->updateLocaleFields($blogEntry);
 
-		return $blog->getId();
+		return $blogEntry->getId();
 	}
 
 	/**
@@ -102,8 +102,8 @@ class blogEntryDAO extends DAO {
 	}
 
 	/**
-	 * Delete a static page object.
-	 * @param $staticPage StaticPage
+	 * Delete a blog entry object.
+	 * @param $blogEntry BlogEntry
 	 */
 	function deleteObject($blog) {
 		$this->deleteById($blog->getId());

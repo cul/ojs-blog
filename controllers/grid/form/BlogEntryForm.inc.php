@@ -16,7 +16,7 @@
 
 import('lib.pkp.classes.form.Form');
 
-class StaticPageForm extends Form {
+class BlogEntryForm extends Form {
 	/** @var int Context (press / journal) ID */
 	var $contextId;
 
@@ -33,7 +33,7 @@ class StaticPageForm extends Form {
 	 * @param $staticPageId int Static page ID (if any)
 	 */
 	function __construct($blogPlugin, $contextId, $staticPageId = null) {
-		parent::__construct($blogPlugin->getTemplateResource('editBlogForm.tpl'));
+		parent::__construct($blogPlugin->getTemplateResource('editBlogEntryForm.tpl'));
 
 		$this->contextId = $contextId;
 		$this->staticPageId = $staticPageId;
@@ -43,13 +43,8 @@ class StaticPageForm extends Form {
 		$this->addCheck(new FormValidatorPost($this));
 		$this->addCheck(new FormValidatorCSRF($this));
 		$this->addCheck(new FormValidator($this, 'title', 'required', 'plugins.generic.blog.nameRequired'));
-		$this->addCheck(new FormValidatorRegExp($this, 'path', 'required', 'plugins.generic.blog.pathRegEx', '/^[a-zA-Z0-9\/._-]+$/'));
+		$this->addCheck(new FormValidator($this, 'content', 'required', 'plugins.generic.blog.nameRequired'));
 		$form = $this;
-		$this->addCheck(new FormValidatorCustom($this, 'path', 'required', 'plugins.generic.blog.duplicatePath', function($path) use ($form) {
-			$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
-			$page = $blogEntryDao->getById($form->contextId);
-			return !$page || $page->getId()==$form->staticPageId;
-		}));
 	}
 
 	/**
@@ -60,7 +55,6 @@ class StaticPageForm extends Form {
 		if ($this->staticPageId) {
 			$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
 			$staticPage = $blogEntryDao->getById($this->staticPageId, $this->contextId);
-			$this->setData('path', $staticPage->getPath());
 			$this->setData('title', $staticPage->getTitle(null)); // Localized
 			$this->setData('content', $staticPage->getContent(null)); // Localized
 		}
@@ -71,7 +65,7 @@ class StaticPageForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('path', 'title', 'content'));
+		$this->readUserVars(array('title', 'content'));
 	}
 
 	/**
@@ -109,7 +103,6 @@ class StaticPageForm extends Form {
 			$staticPage->setContextId($this->contextId);
 		}
 
-		$staticPage->setPath($this->getData('path'));
 		$staticPage->setTitle($this->getData('title'), null); // Localized
 		$staticPage->setContent($this->getData('content'), null); // Localized
 

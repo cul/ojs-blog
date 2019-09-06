@@ -150,11 +150,11 @@ class StaticPageGridHandler extends GridHandler {
 		$this->setupTemplate($request);
 
 		// Create and present the edit form
-		import('plugins.generic.blog.controllers.grid.form.StaticPageForm');
+		import('plugins.generic.blog.controllers.grid.form.BlogEntryForm');
 		$blogPlugin = self::$plugin;
-		$staticPageForm = new StaticPageForm(self::$plugin, $context->getId(), $staticPageId);
-		$staticPageForm->initData();
-		return new JSONMessage(true, $staticPageForm->fetch($request));
+		$blogEntryForm = new BlogEntryForm(self::$plugin, $context->getId(), $staticPageId);
+		$blogEntryForm->initData();
+		return new JSONMessage(true, $blogEntryForm->fetch($request));
 	}
 
 	/**
@@ -169,24 +169,24 @@ class StaticPageGridHandler extends GridHandler {
 		$this->setupTemplate($request);
 
 		// Create and populate the form
-		import('plugins.generic.blog.controllers.grid.form.StaticPageForm');
+		import('plugins.generic.blog.controllers.grid.form.BlogEntryForm');
 		$blogPlugin = self::$plugin;
-		$staticPageForm = new StaticPageForm(self::$plugin, $context->getId(), $staticPageId);
-		$staticPageForm->readInputData();
+		$blogEntryForm = new BlogEntryForm(self::$plugin, $context->getId(), $staticPageId);
+		$blogEntryForm->readInputData();
 
 		// Check the results
-		if ($staticPageForm->validate()) {
+		if ($blogEntryForm->validate()) {
 			// Save the results
-			$staticPageForm->execute();
+			$blogEntryForm->execute();
  			return DAO::getDataChangedEvent();
 		} else {
 			// Present any errors
-			return new JSONMessage(true, $staticPageForm->fetch($request));
+			return new JSONMessage(true, $blogEntryForm->fetch($request));
 		}
 	}
 
 	/**
-	 * Delete a static page
+	 * Delete a blog entry
 	 * @param $args array
 	 * @param $request PKPRequest
 	 * @return string Serialized JSON object

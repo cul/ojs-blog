@@ -1,11 +1,7 @@
 {**
- * templates/editBlogForm.tpl
+ * templates/editBlogEntryForm.tpl
  *
- * Copyright (c) 2014-2019 Simon Fraser University
- * Copyright (c) 2003-2019 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
- *
- * Form for editing a static page
+ * Form for editing a blog entry
  *}
 <script src="{$pluginJavaScriptURL}/StaticPageFormHandler.js"></script>
 <script>
@@ -21,14 +17,13 @@
 </script>
 
 {capture assign=actionUrl}{url router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.blog.controllers.grid.StaticPageGridHandler" op="updateStaticPage" existingPageName=$blockName escape=false}{/capture}
-<form class="pkp_form" id="staticPageForm" method="post" action="{$actionUrl}">
+<form class="pkp_form" id="blogEntryForm" method="post" action="{$actionUrl}">
 	{csrf}
 	{if $staticPageId}
 		<input type="hidden" name="staticPageId" value="{$staticPageId|escape}" />
 	{/if}
-	{fbvFormArea id="blogFormArea" class="border"}
+	{fbvFormArea id="blogEntryFormArea" class="border"}
 		{fbvFormSection}
-			{fbvElement type="text" label="plugins.generic.blog.path" id="path" value=$path maxlength="40" inline=true size=$fbvStyles.size.MEDIUM}
 			{fbvElement type="text" label="plugins.generic.blog.pageTitle" id="title" value=$title maxlength="255" inline=true multilingual=true size=$fbvStyles.size.MEDIUM}
 		{/fbvFormSection}
 		{fbvFormSection label="plugins.generic.blog.content" for="content"}
@@ -36,7 +31,6 @@
 		{/fbvFormSection}
 	{/fbvFormArea}
 	{fbvFormSection class="formButtons"}
-		{fbvElement type="button" class="pkp_helpers_align_left" id="previewButton" label="common.preview"}
 		{assign var=buttonId value="submitFormButton"|concat:"-"|uniqid}
 		{fbvElement type="submit" class="submitFormButton" id=$buttonId label="common.save"}
 	{/fbvFormSection}
