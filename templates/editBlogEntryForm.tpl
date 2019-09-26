@@ -3,33 +3,39 @@
  *
  * Form for editing a blog entry
  *}
-<script src="{$pluginJavaScriptURL}/StaticPageFormHandler.js"></script>
+
 <script>
 	$(function() {ldelim}
 		// Attach the form handler.
-		$('#staticPageForm').pkpHandler(
-			'$.pkp.controllers.form.blog.StaticPageFormHandler',
-			{ldelim}
-				previewUrl: {url|json_encode router=$smarty.const.ROUTE_PAGE page="pages" op="preview"}
-			{rdelim}
-		);
+		$('#blogEntryForm').pkpHandler('$.pkp.controllers.form.AjaxFormHandler');
 	{rdelim});
 </script>
 
-{capture assign=actionUrl}{url router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.blog.controllers.grid.StaticPageGridHandler" op="updateStaticPage" existingPageName=$blockName escape=false}{/capture}
+{capture assign=actionUrl}{url router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.blog.controllers.grid.BlogGridHandler" op="updateBlogEntry" existingPageName=$blockName escape=false}{/capture}
 <form class="pkp_form" id="blogEntryForm" method="post" action="{$actionUrl}">
 	{csrf}
-	{if $staticPageId}
-		<input type="hidden" name="staticPageId" value="{$staticPageId|escape}" />
+	{if $blogEntryId}
+		<input type="hidden" name="blogEntryId" value="{$blogEntryId|escape}" />
 	{/if}
 	{fbvFormArea id="blogEntryFormArea" class="border"}
-		{fbvFormSection}
-			{fbvElement type="text" label="plugins.generic.blog.pageTitle" id="title" value=$title maxlength="255" inline=true multilingual=true size=$fbvStyles.size.MEDIUM}
+		{fbvFormSection label="plugins.generic.blog.pageTitle" for="title"}
+		 <tr valign="top">
+	<td class="value"><input type="text" id="title" name="title" value="{print_r($title, true)}" size="20" maxlength="40" class="textField" /></td>
+ </tr>
 		{/fbvFormSection}
 		{fbvFormSection label="plugins.generic.blog.content" for="content"}
-			{fbvElement type="textarea" multilingual=true name="content" id="content" value=$content rich=true height=$fbvStyles.height.TALL variables=$allowedVariables}
+		 <tr valign="top">
+	<td class="value">
+	<textarea id="content" name="content"  class="textarea" rows="40" cols="500">{$content}</textarea>
+	</td>
+ </tr>
 		{/fbvFormSection}
-	{/fbvFormArea}
+	{/fbvFormArea}	
+	{fbvFormArea id="tagitFields" class="border"}
+	{fbvFormSection label="common.keywords"}
+				{fbvElement type="keyword" id="keywords" multilingual=true current=$keywords}
+			{/fbvFormSection}		
+	{/fbvFormArea}	
 	{fbvFormSection class="formButtons"}
 		{assign var=buttonId value="submitFormButton"|concat:"-"|uniqid}
 		{fbvElement type="submit" class="submitFormButton" id=$buttonId label="common.save"}
