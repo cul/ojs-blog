@@ -14,12 +14,12 @@ import('plugins.generic.blog.controllers.grid.BlogGridRow');
 import('plugins.generic.blog.controllers.grid.BlogGridCellProvider');
 
 class BlogGridHandler extends GridHandler {
-	/** @var blogPlugin The blog plugin */
+	/** @var BlogPlugin The blog plugin */
 	static $plugin;
 
 	/**
 	 * Set the blog plugin.
-	 * @param $plugin blogPlugin
+	 * @param $plugin BlogPlugin
 	 */
 	static function setPlugin($plugin) {
 		self::$plugin = $plugin;

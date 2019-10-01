@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @file blogPlugin.inc.php
+ * @file BlogPlugin.inc.php
  *
  * @package plugins.generic.blog
- * @class blogPlugin
+ * @class BlogPlugin
  * Blog plugin main class
  */
 

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @file blogHandler.inc.php
+ * @file BlogHandler.inc.php
  *
  * @package plugins.generic.blog
- * @class blogHandler
+ * @class BlogHandler
  * Find blog content and display it when requested.
  */
 

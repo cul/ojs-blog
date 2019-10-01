@@ -20,12 +20,12 @@ class BlogEntryForm extends Form {
 	/** @var string blog entry id */
 	var $blogEntryId;
 
-	/** @var blogPlugin plugin */
+	/** @var BlogPlugin plugin */
 	var $plugin;
 
 	/**
 	 * Constructor
-	 * @param $blogPlugin blogPlugin 
+	 * @param $BlogPlugin BlogPlugin 
 	 * @param $contextId int Context ID
 	 * @param $blogEntryId int blog entry ID (if any)
 	 */

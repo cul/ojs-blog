@@ -16,5 +16,5 @@
 	<release>1.2.0.1</release>
 	<date>2014-09-24</date>
 	<lazy-load>1</lazy-load>
-	<class>blogPlugin</class>
+	<class>BlogPlugin</class>
 </version>
