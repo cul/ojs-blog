@@ -10,51 +10,58 @@
 
 <schema version="0.3">
 	<!--
-	 *
-	 * TABLE blog
-	 *
-	 -->
-	<table name="blog">
-		<field name="blog_id" type="I8">
+	  *
+	  * TABLE blog_entry
+	  *
+	  -->
+	<table name="blog_entries">
+		<field name="entry_id" type="I8">
 			<KEY/>
 			<AUTOINCREMENT/>
 		</field>
 		<field name="context_id" type="I8">
 			<NOTNULL/>
 		</field>
-		<descr>blog by context</descr>
+		<field name="title" type="C2" size="255">
+			<NOTNULL/>
+		</field>
+		<field name="content" type="XL">
+			<NOTNULL/>
+		</field>
+		<field name="date_posted" type="T">
+			<NOTNULL/>
+		</field>			
 	</table>
 
 	<!--
 	  *
-	  * TABLE blog_settings
+	  * TABLE blog_keywords
 	  *
 	  -->
-	<table name="blog_settings">
-		<field name="blog_id" type="I8">
+	<table name="blog_keywords">
+		<field name="keyword_id" type="I8">
+			<KEY/>
+			<AUTOINCREMENT/>
+		</field>
+		<field name="keyword" type="C2" size="255">
 			<NOTNULL/>
 		</field>
-		<field name="locale" type="C2" size="14">
-			<NOTNULL/>
-			<DEFAULT VALUE=""/>
-		</field>
-		<field name="setting_name" type="C2" size="255">
-			<NOTNULL/>
-		</field>
-		<field name="setting_value" type="XL"/>
-		<field name="setting_type" type="C2" size="6">
-			<NOTNULL/>
-			<descr>(bool|int|float|string|object)</descr>
-		</field>
-		<descr>Blog settings.</descr>
-		<index name="blog_settings_blog_id">
-			<col>blog_id</col>
-		</index>
-		<index name="blog_settings_pkey">
-			<col>blog_id</col>
-			<col>locale</col>
-			<col>setting_name</col>
-			<UNIQUE />
-		</index>
 	</table>
+
+
+	<!--
+	  *
+	  * TABLE blog_entries_keywords
+	  *
+	  -->
+	<table name="blog_entries_keywords">
+		<field name="entry_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="keyword_id" type="I8">
+			<NOTNULL/>
+		</field>
+	</table>
+
+
 </schema>

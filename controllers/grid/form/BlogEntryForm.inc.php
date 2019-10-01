@@ -1,13 +1,10 @@
 <?php
 
 /**
- * @file controllers/grid/form/StaticPageForm.inc.php
+ * @file controllers/grid/form/BlogEntryForm.inc.php
  *
- * Copyright (c) 2014-2019 Simon Fraser University
- * Copyright (c) 2003-2019 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * @class StaticPageForm
+ * @class BlogEntryForm
  * @ingroup controllers_grid_blog
  *
  * Form for press managers to create and modify sidebar blocks
@@ -20,23 +17,23 @@ class BlogEntryForm extends Form {
 	/** @var int Context (press / journal) ID */
 	var $contextId;
 
-	/** @var string Static page name */
-	var $staticPageId;
+	/** @var string blog entry id */
+	var $blogEntryId;
 
-	/** @var blogPlugin Static pages plugin */
+	/** @var blogPlugin plugin */
 	var $plugin;
 
 	/**
 	 * Constructor
-	 * @param $blogPlugin blogPlugin The static page plugin
+	 * @param $blogPlugin blogPlugin 
 	 * @param $contextId int Context ID
-	 * @param $staticPageId int Static page ID (if any)
+	 * @param $blogEntryId int blog entry ID (if any)
 	 */
-	function __construct($blogPlugin, $contextId, $staticPageId = null) {
+	function __construct($blogPlugin, $contextId, $blogEntryId = null) {
 		parent::__construct($blogPlugin->getTemplateResource('editBlogEntryForm.tpl'));
 
 		$this->contextId = $contextId;
-		$this->staticPageId = $staticPageId;
+		$this->blogEntryId = $blogEntryId;
 		$this->plugin = $blogPlugin;
 
 		// Add form checks
@@ -48,24 +45,25 @@ class BlogEntryForm extends Form {
 	}
 
 	/**
-	 * Initialize form data from current group group.
+	 * Initialize form data from current group.
 	 */
 	function initData() {
 		$templateMgr = TemplateManager::getManager();
-		if ($this->staticPageId) {
-			$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
-			$staticPage = $blogEntryDao->getById($this->staticPageId, $this->contextId);
-			$this->setData('title', $staticPage->getTitle(null)); // Localized
-			$this->setData('content', $staticPage->getContent(null)); // Localized
+		if ($this->blogEntryId) {
+			$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
+			$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
+			$blogEntry = $blogEntryDao->getById($this->blogEntryId);
+			$this->setData('title', $blogEntry->getTitle());
+			$this->setData('content', $blogEntry->getContent());
+			$this->setData('keywords', $blogKeywordDao->getKeywordsByEntryId($this->blogEntryId));
 		}
-
 	}
 
 	/**
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('title', 'content'));
+		$this->readUserVars(array('title', 'content', 'keywords'));
 	}
 
 	/**
@@ -74,18 +72,9 @@ class BlogEntryForm extends Form {
 	function fetch($request, $template = null, $display = false) {
 		$templateMgr = TemplateManager::getManager();
 		$templateMgr->assign(array(
-			'staticPageId' => $this->staticPageId,
+			'blogEntryId' => $this->blogEntryId,
 			'pluginJavaScriptURL' => $this->plugin->getJavaScriptURL($request),
 		));
-
-		if ($context = $request->getContext()) $templateMgr->assign('allowedVariables', array(
-			'contactName' => __('plugins.generic.tinymce.variables.principalContactName', array('value' => $context->getData('contactName'))),
-			'contactEmail' => __('plugins.generic.tinymce.variables.principalContactEmail', array('value' => $context->getData('contactEmail'))),
-			'supportName' => __('plugins.generic.tinymce.variables.supportContactName', array('value' => $context->getData('supportName'))),
-			'supportPhone' => __('plugins.generic.tinymce.variables.supportContactPhone', array('value' => $context->getData('supportPhone'))),
-			'supportEmail' => __('plugins.generic.tinymce.variables.supportContactEmail', array('value' => $context->getData('supportEmail'))),
-		));
-
 		return parent::fetch($request, $template, $display);
 	}
 
@@ -93,24 +82,28 @@ class BlogEntryForm extends Form {
 	 * Save form values into the database
 	 */
 	function execute() {
-		$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
-		if ($this->staticPageId) {
-			// Load and update an existing page
-			$staticPage = $blogEntryDao->getById($this->staticPageId, $this->contextId);
+		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
+		$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
+
+		if ($this->blogEntryId) {
+			// Load and update an existing entry
+			$blogEntry = $blogEntryDao->getById($this->blogEntryId, $this->contextId);
 		} else {
-			// Create a new static page
-			$staticPage = $blogEntryDao->newDataObject();
-			$staticPage->setContextId($this->contextId);
+			// Create a new blog entry
+			$blogEntry = $blogEntryDao->newDataObject();
+			$blogEntry->setContextId($this->contextId);
+		}
+		$blogEntry->setTitle($this->getData('title'));
+		$blogEntry->setContent($this->getData('content'));
+
+		if ($this->blogEntryId) {
+			$blogEntryDao->updateObject($blogEntry);
+		} else {
+			$this->blogEntryId = $blogEntryDao->insertObject($blogEntry);
 		}
 
-		$staticPage->setTitle($this->getData('title'), null); // Localized
-		$staticPage->setContent($this->getData('content'), null); // Localized
+		$blogKeywordDao->setKeywordsByEntryId($this->blogEntryId, $this->getData('keywords'));
 
-		if ($this->staticPageId) {
-			$blogEntryDao->updateObject($staticPage);
-		} else {
-			$blogEntryDao->insertObject($staticPage);
-		}
 	}
 }
 

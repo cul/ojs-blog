@@ -35,53 +35,54 @@ class BlogEntry extends DataObject {
 	/**
 	 * Set entry title
 	 * @param string string
-	 * @param locale
 	 */
-	function setTitle($title, $locale) {
-		return $this->setData('title', $title, $locale);
+	function setTitle($title) {
+		return $this->setData('title', $title);
 	}
 
 	/**
 	 * Get entry title
-	 * @param locale
 	 * @return string
 	 */
-	function getTitle($locale) {
-		return $this->getData('title', $locale);
+	function getTitle() {
+		return $this->getData('title');
 	}
 
-	/**
-	 * Get Localized entry title
-	 * @return string
-	 */
-	function getLocalizedTitle() {
-		return $this->getLocalizedData('title');
-	}
 
 	/**
 	 * Set entry content
 	 * @param $content string
-	 * @param locale
 	 */
-	function setContent($content, $locale) {
-		return $this->setData('content', $content, $locale);
+	function setContent($content) {
+		return $this->setData('content', $content);
 	}
 
 	/**
 	 * Get entry content
-	 * @param locale
 	 * @return string
 	 */
-	function getContent($locale) {
-		return $this->getData('content', $locale);
+	function getContent() {
+		return $this->getData('content');
+	}
+
+	function getAbbreviatedContent(){
+		return implode(' ', array_slice(explode(' ', $this->getData('content')), 0, 25));
 	}
 
 	/**
-	 * Get "localized" content
+	 * Set entry keywords
+	 * @param $keywords array
+	 */
+	function setKeywords($keywords) {
+		return $this->setData('keywords', $keywords);
+	}
+
+	/**
+	 * Get entry keywords
 	 * @return string
 	 */
-	function getEntryContent() {
-		return $this->getLocalizedData('content');
+	function getKeywords() {
+		return $this->getData('keywords');
 	}
 
 
@@ -100,15 +101,6 @@ class BlogEntry extends DataObject {
 	function setDatePosted($datePosted) {
 		$this->setData('datePosted', $datePosted);
 	}
-
-
-	/**
-	 * Get "localized" content
-	 * @return string
-	 */
-	function getLocalizedContent() {
-		return $this->getLocalizedData('content');
-	}		
 
 }
 

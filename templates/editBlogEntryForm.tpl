@@ -33,7 +33,7 @@
 	{/fbvFormArea}	
 	{fbvFormArea id="tagitFields" class="border"}
 	{fbvFormSection label="common.keywords"}
-				{fbvElement type="keyword" id="keywords" multilingual=true current=$keywords}
+				{fbvElement type="keyword" id="keywords" current="{$keywords}" }
 			{/fbvFormSection}		
 	{/fbvFormArea}	
 	{fbvFormSection class="formButtons"}

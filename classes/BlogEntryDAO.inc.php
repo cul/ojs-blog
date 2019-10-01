@@ -1,31 +1,27 @@
 <?php
 
 /**
- * @file classes/blogEntryDAO.inc.php
+ * @file classes/BlogEntryDAO.inc.php
  *
  *
  * @package plugins.generic.blog
- * @class blogEntryDAO
+ * @class BlogEntryDAO
  * Operations for retrieving and modifying blog objects.
  */
 
 import('lib.pkp.classes.db.DAO');
 import('plugins.generic.blog.classes.BlogEntry');
 
-class blogEntryDAO extends DAO {
+class BlogEntryDAO extends DAO {
 
 	/**
 	 * Get a blog entry by ID
-	 * @param $blogId int blog ID
-	 * @param $contextId int Optional context ID
+	 * @param $blogEntryId int blog ID
 	 */
-	function getById($blogEntryId, $contextId = null) {
+	function getById($blogEntryId) {
 		$params = array((int) $blogEntryId);
-		if ($contextId) $params[] = $contextId;
-
-		$result = $this->retrieve('SELECT * FROM blog_entries WHERE context_id = ?',
+		$result = $this->retrieve('SELECT * FROM blog_entries WHERE entry_id = ?',
 			$params);
-
 		$returner = null;
 		if ($result->RecordCount() != 0) {
 			$returner = $this->_fromRow($result->GetRowAssoc(false));
@@ -35,14 +31,14 @@ class blogEntryDAO extends DAO {
 	}
 
 	/**
-	 * Get a set of static pages by context ID
+	 * Get a set of blog entries by context ID
 	 * @param $contextId int
 	 * @param $rangeInfo Object optional
 	 * @return DAOResultFactory
 	 */
 	function getByContextId($contextId, $rangeInfo = null) {
 		$result = $this->retrieveRange(
-			'SELECT * FROM blog_entries WHERE context_id = ?',
+			'SELECT * FROM blog_entries WHERE context_id = ? order by date_posted desc',
 			(int) $contextId,
 			$rangeInfo
 		);
@@ -51,53 +47,49 @@ class blogEntryDAO extends DAO {
 	}
 
 	/**
-	 * Insert a blog.
-	 * @param $blog Blog
-	 * @return int Inserted blog ID
+	 * Insert a blog entry.
+	 * @param $blogEntry BlogEntry
+	 * @return int Inserted blogEntryID
 	 */
 	function insertObject($blogEntry) {
+		$valArray = [(int) $blogEntry->getContextId(), $blogEntry->getTitle(), $blogEntry->getContent(), Core::getCurrentDate()];
+
 		$this->update(
-			'INSERT INTO blog_entries (context_id) VALUES (?)',
-			array(
-				(int) $blogEntry->getContextId()
-			)
+		   'INSERT INTO blog_entries (context_id, title, content, date_posted) VALUES (?,?,?,?)',
+			$valArray
 		);
 
 		$blogEntry->setId($this->getInsertId());
-		$this->updateLocaleFields($blogEntry);
 
 		return $blogEntry->getId();
 	}
 
 	/**
-	 * Update the database with a blog object
-	 * @param $blog blog
+	 * Update the database with a blogEntry object
+	 * @param $blogEntry BlogEntry
 	 */
-	function updateObject($blog) {
+	function updateObject($blogEntry) {
 		$this->update(
-			'UPDATE	blog
-			SET	context_id = ?
-			WHERE	blog_id = ?',
+			'UPDATE	blog_entries
+			SET	context_id = ?, title = ?, content = ? 
+			WHERE	entry_id = ?',
 			array(
-				(int) $blog->getContextId(),
-				(int) $blog->getId()
+				(int) $blogEntry->getContextId(),
+				$blogEntry->getTitle(),
+				$blogEntry->getContent(),
+				(int) $blogEntry->getId()
 			)
 		);
-		$this->updateLocaleFields($blog);
 	}
 
 	/**
-	 * Delete a static page by ID.
-	 * @param $staticPageId int
+	 * Delete blog entry by ID.
+	 * @param $blogEntry int
 	 */
-	function deleteById($blogId) {
+	function deleteById($entryId) {
 		$this->update(
-			'DELETE FROM blog WHERE blog_id = ?',
-			(int) $blogId
-		);
-		$this->update(
-			'DELETE FROM blog_settings WHERE blog_id = ?',
-			(int) $blogId
+			'DELETE FROM blog_entries WHERE entry_id = ?',
+			(int) $entryId
 		);
 	}
 
@@ -105,55 +97,41 @@ class blogEntryDAO extends DAO {
 	 * Delete a blog entry object.
 	 * @param $blogEntry BlogEntry
 	 */
-	function deleteObject($blog) {
-		$this->deleteById($blog->getId());
+	function deleteObject($blogEntry) {
+		$this->deleteById($blogEntry->getId());
 	}
 
 	/**
-	 * Generate a new static page object.
-	 * @return StaticPage
+	 * Generate a new blog entry object.
+	 * @return blogEntry
 	 */
 	function newDataObject() {
 		return new BlogEntry();
 	}
 
 	/**
-	 * Return a new static pages object from a given row.
-	 * @return StaticPage
+	 * Return a new blog entry object from a given row.
+	 * @return blogEntry
 	 */
 	function _fromRow($row) {
-		$blog = $this->newDataObject();
-		$blog->setId($row['blog_id']);
-		$blog->setContextId($row['context_id']);
-	    $this->getDataObjectSettings('blog_settings', 'blog_id', $row['blog_id'], $blog);
-		return $blog;
+		$blogEntry = $this->newDataObject();
+		$blogEntry->setId($row['entry_id']);
+		$blogEntry->setContextId($row['context_id']);
+		$blogEntry->setTitle($row['title']);
+		$blogEntry->setContent($row['content']);
+		$blogEntry->setDatePosted($row['date_posted']);
+		return $blogEntry;
 	}
 
 	/**
-	 * Get the insert ID for the last inserted static page.
+	 * Get the insert ID for the last inserted blog entry.
 	 * @return int
 	 */
 	function getInsertId() {
-		return $this->_getInsertId('blog', 'blog_id');
+		return $this->_getInsertId('blog_entries', 'entry_id');
 	}
 
-	/**
-	 * Get field names for which data is localized.
-	 * @return array
-	 */
-	function getLocaleFieldNames() {
-		return array('title', 'content');
-	}
 
-	/**
-	 * Update the localized data for this object
-	 * @param $author object
-	 */
-	function updateLocaleFields(&$staticPage) {
-		$this->updateDataObjectSettings('blog_settings', $blogEntry, array(
-			'blog_id' => $blogEntry->getId()
-		));
-	}
 
 	/**
 	 * Get blog entry posted datetime.

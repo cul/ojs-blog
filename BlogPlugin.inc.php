@@ -3,13 +3,9 @@
 /**
  * @file blogPlugin.inc.php
  *
- * Copyright (c) 2014-2019 Simon Fraser University
- * Copyright (c) 2003-2019 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
- *
  * @package plugins.generic.blog
  * @class blogPlugin
- * Static pages plugin main class
+ * Blog plugin main class
  */
 
 import('lib.pkp.classes.plugins.GenericPlugin');
@@ -48,19 +44,23 @@ class BlogPlugin extends GenericPlugin {
 	function register($category, $path, $mainContextId = null) {
 		if (parent::register($category, $path, $mainContextId)) {
 			if ($this->getEnabled($mainContextId)) {
-				// Register the static pages DAO.
-				import('plugins.generic.blog.classes.blogEntryDAO');
-				$blogEntryDao = new blogEntryDAO();
-				DAORegistry::registerDAO('blogEntryDAO', $blogEntryDao);
+				// Register the blog entry DAO.
+				import('plugins.generic.blog.classes.BlogEntryDAO');
+				import('plugins.generic.blog.classes.BlogKeywordDAO');
+				$blogEntryDao = new BlogEntryDAO();
+				$blogKeywordDao = new BlogKeywordDAO();
+				DAORegistry::registerDAO('BlogEntryDAO', $blogEntryDao);
+				DAORegistry::registerDAO('BlogKeywordDAO', $blogKeywordDao);
+
 
 				HookRegistry::register('Template::Settings::website', array($this, 'callbackShowWebsiteSettingsTabs'));
 
 				// Intercept the LoadHandler hook to present
-				// static pages when requested.
-				// HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
+				// blog entries when requested.
+				HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
 
 				// Register the components this plugin implements to
-				// permit administration of static pages.
+				// permit administration of blog entries
 				HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
 			}
 			return true;
@@ -69,7 +69,7 @@ class BlogPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Extend the website settings tabs to include static pages
+	 * Extend the website settings tabs to include the blog
 	 * @param $hookName string The name of the invoked hook
 	 * @param $args array Hook parameters
 	 * @return boolean Hook handling status
@@ -93,40 +93,29 @@ class BlogPlugin extends GenericPlugin {
 	 * @return boolean Hook handling status
 	 */
 	function callbackHandleContent($hookName, $args) {
-		$request = Application::get()->getRequest();
-		$templateMgr = TemplateManager::getManager($request);
-
-		$page =& $args[0];
-		$op =& $args[1];
-
-		$blogEntryDao = DAORegistry::getDAO('blogEntryDAO');
-		$staticPage = $blogEntryDao->newDataObject();
-
-		// Trick the handler into dealing with it normally
-		$page = 'pages';
-		$op = 'view';
-
-		// It is -- attach the static pages handler.
-		define('HANDLER_CLASS', 'blogHandler');
-		$this->import('blogHandler');
-
-		// Allow the static pages page handler to get the plugin object
-		blogHandler::setPlugin($this);
-		blogHandler::setPage($staticPage);
-		return true;
+		$page = $args[0];
+		if ($page === 'blog') {
+			$this->import('BlogHandler');
+			define('HANDLER_CLASS', 'BlogHandler');
+			// Allow the blog handler to get the plugin object
+			blogHandler::setPlugin($this);
+			return true;
+		}
+		return false;
 	}
 
+
 	/**
-	 * Permit requests to the static pages grid handler
+	 * Permit requests to the blog entry grid handler
 	 * @param $hookName string The name of the hook being invoked
 	 * @param $args array The parameters to the invoked hook
 	 */
 	function setupGridHandler($hookName, $params) {
 		$component =& $params[0];
-		if ($component == 'plugins.generic.blog.controllers.grid.StaticPageGridHandler') {
-			// Allow the static page grid handler to get the plugin object
+		if ($component == 'plugins.generic.blog.controllers.grid.BlogGridHandler') {
+			// Allow the blog handler to get the plugin object
 			import($component);
-			StaticPageGridHandler::setPlugin($this);
+			BlogGridHandler::setPlugin($this);
 			return true;
 		}
 		return false;
