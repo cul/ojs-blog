@@ -10,59 +10,8 @@
  */
 
 import('lib.pkp.classes.db.DAO');
-import('plugins.generic.blog.classes.BlogKeyword');
 
 class BlogKeywordDAO extends DAO {
-
-
-	/**
-	 * Insert a blog Keyword.
-	 * @param $blogKeyword BlogKeyword
-	 * @return int Inserted blogKeywordID
-	 */
-	function insertObject($blogKeyword) {
-		$valArray = [(int) $blogKeyword->getKeyword()];
-
-		$this->update(
-		   'INSERT INTO blog_keywords (keyword) VALUES (?)',
-			$valArray
-		);
-
-		$blogKeyword->setId($this->getInsertId());
-
-		return $blogKeyword->getId();
-	}
-
-
-	/**
-	 * Delete blog Keyword by ID.
-	 * @param $keywordId int
-	 */
-	function deleteById($keywordId) {
-		$this->update(
-			'DELETE FROM blog_keywords WHERE keyword_id = ?',
-			(int) $keywordId
-		);
-	}
-
-	/**
-	 * Generate a new blog Keyword object.
-	 * @return blogKeyword
-	 */
-	function newDataObject() {
-		return new BlogKeyword();
-	}
-
-	/**
-	 * Return a new blog Keyword object from a given row.
-	 * @return blogKeyword
-	 */
-	function _fromRow($row) {
-		$blogKeyword = $this->newDataObject();
-		$blogKeyword->setId($row['keyword_id']);
-		$blogKeyword->setKeyword($row['keyword']);
-		return $blogKeyword;
-	}
 
 	/**
 	 * Get the insert ID for the last inserted blog Keyword.
