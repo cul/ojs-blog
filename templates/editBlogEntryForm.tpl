@@ -20,7 +20,7 @@
 	{fbvFormArea id="blogEntryFormArea" class="border"}
 		{fbvFormSection label="plugins.generic.blog.pageTitle" for="title"}
 		 <tr valign="top">
-	<td class="value"><input type="text" id="title" name="title" value="{print_r($title, true)}" size="20" maxlength="40" class="textField" /></td>
+	<td class="value"><input type="text" id="title" name="title" value="{$title}" size="20" maxlength="40" class="textField" /></td>
  </tr>
 		{/fbvFormSection}
 		{fbvFormSection label="plugins.generic.blog.content" for="content"}
@@ -33,7 +33,7 @@
 	{/fbvFormArea}	
 	{fbvFormArea id="tagitFields" class="border"}
 	{fbvFormSection label="common.keywords"}
-				{fbvElement type="keyword" id="keywords" current="{$keywords}" }
+				{fbvElement type="keyword" id="keywords" current=$keywords }
 			{/fbvFormSection}		
 	{/fbvFormArea}	
 	{fbvFormSection class="formButtons"}

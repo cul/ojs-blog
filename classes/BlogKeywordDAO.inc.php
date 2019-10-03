@@ -74,7 +74,8 @@ class BlogKeywordDAO extends DAO {
 
 
 	function getKeywordsByEntryId($entryId){
-			$keywords =[];
+			$kw =[];
+			$keywords = [];
 			$result = $this->retrieve(
 				'SELECT keyword_id FROM blog_entries_keywords WHERE entry_id = ?',
 				$entryId
@@ -86,11 +87,11 @@ class BlogKeywordDAO extends DAO {
 						'SELECT keyword FROM blog_keywords WHERE keyword_id = ?',
 						$row['keyword_id']
 					);
-					$keywords[] = $kidres->GetRows()[0]['keyword'];
+					$kw[] = $kidres->GetRows()[0]['keyword'];
 					$result->MoveNext();
 				}
 			}
-			error_log(print_r($keywords, true));
+			$keywords['en_US'] = $kw;
 			return $keywords; 	
 	}
 
