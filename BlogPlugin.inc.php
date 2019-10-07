@@ -53,7 +53,7 @@ class BlogPlugin extends GenericPlugin {
 				DAORegistry::registerDAO('BlogKeywordDAO', $blogKeywordDao);
 
 
-				HookRegistry::register('Template::Settings::website', array($this, 'callbackShowWebsiteSettingsTabs'));
+				HookRegistry::register('Templates::Management::Settings::website', array($this, 'callbackShowWebsiteSettingsTabs'));
 
 				// Intercept the LoadHandler hook to present
 				// blog entries when requested.
@@ -80,7 +80,8 @@ class BlogPlugin extends GenericPlugin {
 		$request =& Registry::get('request');
 		$dispatcher = $request->getDispatcher();
 
-		$output .= $templateMgr->fetch($this->getTemplateResource('blogTab.tpl'));
+       $output .= '<li><a name="blog" href="' . $dispatcher->url($request, ROUTE_COMPONENT, null, 'plugins.generic.blog.controllers.grid.BlogGridHandler', 'fetchGrid') . '">' . __('plugins.generic.blog.blog') . '</a></li>';
+		
 
 		// Permit other plugins to continue interacting with this hook
 		return false;
