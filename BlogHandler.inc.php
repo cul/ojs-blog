@@ -40,8 +40,13 @@ class BlogHandler extends Handler {
 	 * @param $request PKPRequest Request object.
 	 */
 	function index($args, $request) {
+		error_log(print_r($args, true));
 		$keyword = null;
-		if($_GET['keyword']){$keyword=$_GET['keyword'];};
+		if($_GET['keyword']){
+			$keyword=$_GET['keyword'];
+		}else{
+			$keyword = $args[0];
+		}
 		$templateMgr = TemplateManager::getManager($request);
 		$context = $request->getContext();
 		$contextId = $context?$context->getId():CONTEXT_ID_NONE;
@@ -52,6 +57,9 @@ class BlogHandler extends Handler {
 		$blogKeywords = $blogKeywordDao->getBlogKeywords($context->getId());
 		$templateMgr->assign('entries', $blogEntries);
 		$templateMgr->assign('keywords', $blogKeywords);
+		if($keyword){
+			$templateMgr->assign('currentKeyword', $keyword);
+		}
 		//3.1.2?
 		//$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
 		$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
@@ -68,8 +76,11 @@ class BlogHandler extends Handler {
 		$id = $args[0];
 
 		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
+		$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
 		$blogEntry = $blogEntryDao->getById($id);
 		$templateMgr->assign('entry', $blogEntry);
+		$entryKeywords = $blogKeywordDao->getKeywordsByEntryId($blogEntry->getId());		
+		$templateMgr->assign('keywords', $entryKeywords);
 		$templateMgr->display(self::$plugin->getTemplateResource('entry.tpl'));
 	}
 }

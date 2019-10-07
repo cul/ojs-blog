@@ -95,8 +95,6 @@ class BlogKeywordDAO extends DAO {
 					$result->MoveNext();
 				}
 			}
-			// $keywords['en_US'] = $kw;
-			// return $keywords; 	
 			return $kw;
 	} 
 

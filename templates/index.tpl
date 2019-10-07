@@ -8,7 +8,7 @@
 <div class="container page-announcement">
 	<div class="row page-header justify-content-md-center">
 		<div class="col-md-8">
-			<h1>Blog</h1>
+			<h1>{$title}</h1>
 		</div>
 	</div>
 <div class="container page-announcement">
@@ -20,7 +20,7 @@
 			Filter by keyword: 
 		<select name="keyword" onchange='this.form.submit()'>
 		{foreach from=$keywords item=word }
-			<option value="{$word}">{$word}</option>
+			<option value="{$word}" {if $word == $currentKeyword}selected{/if}>{$word}</option>
 		{/foreach}
 		</select> 
 	</form>
@@ -35,7 +35,7 @@
 
  <article class="announcement-summary">
 	<h2>
-		<a href="blog/view/{$entry->getId()}">
+		<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="view" path=$entry->getId()}">
 			{$entry->getTitle()}
 		</a>
 	</h2>

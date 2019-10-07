@@ -21,6 +21,15 @@
     		</article>
 		</div>
 	</div>
+	<div class="row justify-content-md-center">
+		<div class="col-md-8">
+			<article class="page-content">
+		{foreach from=$keywords['en_US'] item=word }
+						<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" path="$word"}">{$word}</a>
+		{/foreach}
+		</article>
+		</div>
+	</div>
 </article>
 
 {include file="frontend/components/footer.tpl"}
