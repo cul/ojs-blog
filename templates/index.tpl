@@ -8,9 +8,25 @@
 <div class="container page-announcement">
 	<div class="row page-header justify-content-md-center">
 		<div class="col-md-8">
-			<h1>{$title|escape}</h1>
+			<h1>Blog</h1>
 		</div>
 	</div>
+<div class="container page-announcement">
+
+
+	<form method="get">
+	<div class="row page-header justify-content-md-center">
+		<div class="col-md-8">
+			Filter by keyword: 
+		<select name="keyword" onchange='this.form.submit()'>
+		{foreach from=$keywords item=word }
+			<option value="{$word}">{$word}</option>
+		{/foreach}
+		</select> 
+	</form>
+		</div>
+	</div>
+</div>	
 	<div class="row justify-content-md-center">
 		<div class="col-md-8">
 			<div class="page-content">

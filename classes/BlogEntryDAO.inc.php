@@ -36,11 +36,15 @@ class BlogEntryDAO extends DAO {
 	 * @param $rangeInfo Object optional
 	 * @return DAOResultFactory
 	 */
-	function getByContextId($contextId, $rangeInfo = null) {
+	function getByContextId($contextId, $keyword = null) {
+		$params = array((int) $contextId);
+		if ($keyword) $params[] = $keyword;
+
 		$result = $this->retrieveRange(
-			'SELECT * FROM blog_entries WHERE context_id = ? order by date_posted desc',
-			(int) $contextId,
-			$rangeInfo
+			'SELECT distinct e.* FROM blog_entries e, blog_keywords k, blog_entries_keywords b WHERE e.context_id = ? '
+			. ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ?':'')
+			.' order by e.date_posted desc',
+				$params
 		);
 
 		return new DAOResultFactory($result, $this, '_fromRow');

@@ -47,6 +47,14 @@ class BlogKeywordDAO extends DAO {
 
 	function setKeywordsByEntryId($entryId, $keywords){
 		$k = $keywords['keywords'];
+
+		//first clear entries
+		$this->update(
+		   			'DELETE FROM blog_entries_keywords where entry_id = ?',
+					$entryId
+				);
+
+		//now update new values
 		foreach($k as $keyword){
 			$result = $this->retrieve(
 				'SELECT keyword_id FROM blog_keywords WHERE keyword = ?',
@@ -70,16 +78,32 @@ class BlogKeywordDAO extends DAO {
 					$valArray
 				);
 			}
-
-		//does this keyword ezist? if so, just add entry to keyword_entries
-		//if not ezist, create and then add to keyword_entries 
 		}
 	}
 
-	function getBlogKeywordsByContext($contextId){
-		//select all entry ids with this contezt id, then select all keywords associated with those entries
+	function getBlogKeywords($contextId){
+			$kw =[];
+			$keywords = [];
+			$result = $this->retrieve(
+				'SELECT distinct k.keyword as keyword FROM blog_keywords k, blog_entries_keywords b, blog_entries e WHERE e.context_id = ? and k.keyword_id=b.keyword_id and b.entry_id=e.entry_id',
+				$contextId
+			);
+			if ($result->RecordCount() != 0) {
+				while (!$result->EOF) {
+					$row = $result->GetRowAssoc(false);
+					$kw[] = $row['keyword'];
+					$result->MoveNext();
+				}
+			}
+			// $keywords['en_US'] = $kw;
+			// return $keywords; 	
+			return $kw;
 	} 
 
+	function getBlogKeywordsAsJSON(){
+		$contextId = Application::getApplication()->getRequest()->getContext()->getId();
+		$kw = $this->getBlogKeywords($contextId);
+	}
 
 
 }

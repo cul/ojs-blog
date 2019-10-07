@@ -40,16 +40,20 @@ class BlogHandler extends Handler {
 	 * @param $request PKPRequest Request object.
 	 */
 	function index($args, $request) {
+		$keyword = null;
+		if($_GET['keyword']){$keyword=$_GET['keyword'];};
 		$templateMgr = TemplateManager::getManager($request);
 		$context = $request->getContext();
 		$contextId = $context?$context->getId():CONTEXT_ID_NONE;
 
 		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
 		$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
-		$blogEntries = $blogEntryDao->getByContextId($context->getId())->toArray();
-//		$blogKeywords = $blogKeywordDAO->getBlogKeywordsByContext($context->getId());
+		$blogEntries = $blogEntryDao->getByContextId($context->getId(), $keyword)->toArray();
+		$blogKeywords = $blogKeywordDao->getBlogKeywords($context->getId());
 		$templateMgr->assign('entries', $blogEntries);
-//		$templateMgr->assign('keywords', $blogKeywords);
+		$templateMgr->assign('keywords', $blogKeywords);
+		//3.1.2?
+		//$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
 		$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
 	}
 
