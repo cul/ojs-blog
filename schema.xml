@@ -25,6 +25,9 @@
 		<field name="title" type="C2" size="255">
 			<NOTNULL/>
 		</field>
+		<field name="byline" type="C2" size="255">
+			<NOTNULL/>
+		</field>
 		<field name="content" type="XL">
 			<NOTNULL/>
 		</field>

@@ -17,6 +17,7 @@
 	<message key="plugins.generic.blog.blog">Blog</message>
 	<message key="plugins.generic.blog.pageTitle">Title</message>
 	<message key="plugins.generic.blog.content">Content</message>
+	<message key="plugins.generic.blog.byline">Authors</message>
 	<message key="plugins.generic.blog.keyword">Keyword</message>
 
 	<message key="plugins.generic.blog.requirement.tinymce"><![CDATA[<p><strong>The TinyMCE Plugin must be installed and enabled in order to add/edit content.</strong></p>]]></message>

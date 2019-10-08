@@ -57,6 +57,7 @@ class BlogEntryForm extends Form {
 			$blogEntry = $blogEntryDao->getById($this->blogEntryId);
 			$this->setData('title', $blogEntry->getTitle());
 			$this->setData('content', $blogEntry->getContent());
+			$this->setData('byline', $blogEntry->getByline());
 			$this->setData('keywords', $blogKeywordDao->getKeywordsByEntryId($this->blogEntryId));
 		}
 	}
@@ -65,7 +66,7 @@ class BlogEntryForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('title', 'content', 'keywords'));
+		$this->readUserVars(array('title', 'content', 'byline', 'keywords'));
 	}
 
 	/**
@@ -97,6 +98,7 @@ class BlogEntryForm extends Form {
 		}
 		$blogEntry->setTitle($this->getData('title'));
 		$blogEntry->setContent($this->getData('content'));
+		$blogEntry->setByline($this->getData('byline'));
 
 		if ($this->blogEntryId) {
 			$blogEntryDao->updateObject($blogEntry);

@@ -11,6 +11,7 @@
 
 import('lib.pkp.classes.db.DAO');
 import('plugins.generic.blog.classes.BlogEntry');
+import('plugins.generic.blog.classes.BlogKeywordDAO');
 
 class BlogEntryDAO extends DAO {
 
@@ -56,10 +57,10 @@ class BlogEntryDAO extends DAO {
 	 * @return int Inserted blogEntryID
 	 */
 	function insertObject($blogEntry) {
-		$valArray = [(int) $blogEntry->getContextId(), $blogEntry->getTitle(), $blogEntry->getContent(), Core::getCurrentDate()];
+		$valArray = [(int) $blogEntry->getContextId(), $blogEntry->getTitle(), $blogEntry->getContent(), $blogEntry->getByline(), Core::getCurrentDate()];
 
 		$this->update(
-		   'INSERT INTO blog_entries (context_id, title, content, date_posted) VALUES (?,?,?,?)',
+		   'INSERT INTO blog_entries (context_id, title, content, byline, date_posted) VALUES (?,?,?,?,?)',
 			$valArray
 		);
 
@@ -75,12 +76,13 @@ class BlogEntryDAO extends DAO {
 	function updateObject($blogEntry) {
 		$this->update(
 			'UPDATE	blog_entries
-			SET	context_id = ?, title = ?, content = ? 
+			SET	context_id = ?, title = ?, content = ?, byline = ?  
 			WHERE	entry_id = ?',
 			array(
 				(int) $blogEntry->getContextId(),
 				$blogEntry->getTitle(),
 				$blogEntry->getContent(),
+				$blogEntry->getByline(),
 				(int) $blogEntry->getId()
 			)
 		);
@@ -123,7 +125,11 @@ class BlogEntryDAO extends DAO {
 		$blogEntry->setContextId($row['context_id']);
 		$blogEntry->setTitle($row['title']);
 		$blogEntry->setContent($row['content']);
+		$blogEntry->setByline($row['byline']);
 		$blogEntry->setDatePosted($row['date_posted']);
+		$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
+		$entryKeywords = $blogKeywordDao->getKeywordsByEntryId($blogEntry->getId());		
+		$blogEntry->setKeywords($entryKeywords);		
 		return $blogEntry;
 	}
 

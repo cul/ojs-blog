@@ -40,7 +40,6 @@ class BlogHandler extends Handler {
 	 * @param $request PKPRequest Request object.
 	 */
 	function index($args, $request) {
-		error_log(print_r($args, true));
 		$keyword = null;
 		if($_GET['keyword']){
 			$keyword=$_GET['keyword'];
@@ -72,15 +71,12 @@ class BlogHandler extends Handler {
 	 */
 	function view($args, $request) {
 		$templateMgr = TemplateManager::getManager($request);
-
 		$id = $args[0];
-
 		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
 		$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
 		$blogEntry = $blogEntryDao->getById($id);
 		$templateMgr->assign('entry', $blogEntry);
-		$entryKeywords = $blogKeywordDao->getKeywordsByEntryId($blogEntry->getId());		
-		$templateMgr->assign('keywords', $entryKeywords);
+		$templateMgr->assign('keywords', $blogEntry->getKeywords());
 		$templateMgr->display(self::$plugin->getTemplateResource('entry.tpl'));
 	}
 }

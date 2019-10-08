@@ -48,6 +48,22 @@ class BlogEntry extends DataObject {
 		return $this->getData('title');
 	}
 
+	/**
+	 * Set entry byline
+	 * @param string string
+	 */
+	function setByline($byline){
+		return $this->setData('byline',$byline);
+	}
+
+	/**
+	 * Get entry byline
+	 * @return string
+	 */
+	function getByline(){
+		return $this->getData('byline');
+	}
+
 
 	/**
 	 * Set entry content
@@ -82,7 +98,7 @@ class BlogEntry extends DataObject {
 	 * @return string
 	 */
 	function getKeywords() {
-		return $this->getData('keywords');
+		return $this->getData('keywords')['en_US'];
 	}
 
 

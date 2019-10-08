@@ -39,6 +39,9 @@
 			{$entry->getTitle()}
 		</a>
 	</h2>
+	<div>
+		By {$entry->getByline()}
+	</div>
 	<div class="announcement-summary-date">
 		{$entry->getDatePosted()|date_format:"F jS, Y"}
 	</div>
@@ -51,6 +54,16 @@
 			</a>
 		</div>
 	</div>
+	<div class="row justify-content-md-center">
+		<div class="col-md-8">
+			<article class="page-content">
+		{$keywords = $entry->getKeywords()}
+		{foreach from=$keywords item=word }
+						<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" path="$word"}">{$word}</a>
+		{/foreach}
+		</article>
+		</div>
+	</div>	
 </article>      	    				
 
 {/foreach}

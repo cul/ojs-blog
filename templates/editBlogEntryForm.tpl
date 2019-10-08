@@ -20,7 +20,7 @@
 	{fbvFormArea id="blogEntryFormArea" class="border"}
 		{fbvFormSection label="plugins.generic.blog.pageTitle" for="title"}
 		 <tr valign="top">
-	<td class="value"><input type="text" id="title" name="title" value="{$title}" size="20" maxlength="40" class="textField" /></td>
+	<td class="value"><input type="text" id="title" name="title" value="{$title}" size="20" maxlength="255" class="textField" /></td>
  </tr>
 		{/fbvFormSection}
 		{fbvFormSection label="plugins.generic.blog.content" for="content"}
@@ -28,6 +28,11 @@
 	<td class="value">
 	<textarea id="content" name="content"  class="textarea" rows="40" cols="500">{$content}</textarea>
 	</td>
+ </tr>
+		{/fbvFormSection}
+		{fbvFormSection label="plugins.generic.blog.byline" for="byline"}
+		 <tr valign="top">
+	<td class="value"><input type="text" id="byline" name="byline" value="{$byline}" size="20" maxlength="255" class="textField" /></td>
  </tr>
 		{/fbvFormSection}
 	{/fbvFormArea}	
