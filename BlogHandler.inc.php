@@ -5,7 +5,7 @@
  *
  * @package plugins.generic.blog
  * @class BlogHandler
- * Find blog content and display it when requested.
+ * Find blog entries and display them when requested.
  */
 
 import('classes.handler.Handler');

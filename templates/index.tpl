@@ -30,8 +30,8 @@
 	<div class="row justify-content-md-center">
 		<div class="col-md-8">
 			<div class="page-content">
-        
-{foreach $entries as $entry}
+
+	{foreach from=$entries item=entry}        
 
  <article class="announcement-summary">
 	<h2>
@@ -40,10 +40,10 @@
 		</a>
 	</h2>
 	<div>
-		By {$entry->getByline()}
+		{if null !== $entry->getByline() }By{/if}  {$entry->getByline()}
 	</div>
 	<div class="announcement-summary-date">
-		{$entry->getDatePosted()|date_format:"F jS, Y"}
+		{$entry->getDatePosted()|date_format:"%B %e, %Y"}
 	</div>
 	<div class="announcement-summary-description">
 
@@ -57,8 +57,8 @@
 	<div class="row justify-content-md-center">
 		<div class="col-md-8">
 			<article class="page-content">
-		{$keywords = $entry->getKeywords()}
-		{foreach from=$keywords item=word }
+		{assign var=entry_keywords value=$entry->getKeywords()}
+		{foreach from=$entry_keywords item=word }
 						<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" path="$word"}">{$word}</a>
 		{/foreach}
 		</article>

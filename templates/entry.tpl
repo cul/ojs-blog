@@ -9,12 +9,12 @@
 	<div class="row page-header justify-content-md-center">
 		<div class="col-md-8">
 		    <div class="announcement-date">
-		      {$entry->getDatePosted()|date_format:"F jS, Y"}
+			{$entry->getDatePosted()|date_format:"%B %e, %Y"}
 		    </div>
 			<h1>{$entry->getTitle()}</h1>
 		</div>
 		<div>
-		By {$entry->getByline()}
+		{if null !== $entry->getByline() }By{/if} {$entry->getByline()}
 		</div>
 	</div>
 	<div class="row justify-content-md-center">
