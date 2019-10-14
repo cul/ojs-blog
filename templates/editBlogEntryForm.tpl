@@ -22,19 +22,19 @@
 		 <tr valign="top">
 	<td class="value"><input type="text" id="title" name="title" value="{$title}" size="20" maxlength="255" class="textField" /></td>
  </tr>
-		{/fbvFormSection}
-		{fbvFormSection label="plugins.generic.blog.content" for="content"}
-		 <tr valign="top">
-	<td class="value">
-	<textarea id="content" name="content"  class="textarea" rows="40" cols="500">{$content}</textarea>
-	</td>
- </tr>
-		{/fbvFormSection}
-		{fbvFormSection label="plugins.generic.blog.byline" for="byline"}
+	{/fbvFormSection}
+	{fbvFormSection label="plugins.generic.blog.content" for="content"}
+	<tr valign="top">
+		<td class="value">
+		{fbvElement type="textarea" id="content" value=$content rich=true}
+		</td>
+ 	</tr>
+	{/fbvFormSection}
+	{fbvFormSection label="plugins.generic.blog.byline" for="byline"}
 		 <tr valign="top">
 	<td class="value"><input type="text" id="byline" name="byline" value="{$byline}" size="20" maxlength="255" class="textField" /></td>
  </tr>
-		{/fbvFormSection}
+	{/fbvFormSection}
 	{/fbvFormArea}	
 	{fbvFormArea id="tagitFields" class="border"}
 	{fbvFormSection label="common.keywords"}
