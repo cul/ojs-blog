@@ -5,10 +5,10 @@
  *}
 {include file="frontend/components/header.tpl" pageTitleTranslated=$title}
 
-<article class="container page-announcement">
+<article class="container page-blog-post">
 	<div class="row page-header justify-content-md-center">
 		<div class="col-md-8">
-		    <div class="announcement-date">
+		    <div class="blog-date">
 			{$entry->getDatePosted()|date_format:"%B %e, %Y"}
 		    </div>
 			<h1>{$entry->getTitle()}</h1>
@@ -17,14 +17,14 @@
 		{if null !== $entry->getByline() }By{/if} {$entry->getByline()}
 		</div>
 	</div>
-	<div class="row justify-content-md-center">
+	<div class="row justify-content-md-center blog-post-content">
 		<div class="col-md-8">
-			<article class="page-content">
+			<article class="page-content blog-post-content">
 			{$entry->getContent()}
     		</article>
 		</div>
 	</div>
-	<div class="row justify-content-md-center">
+	<div class="row justify-content-md-center blog-post-tags">
 		<div class="col-md-8">
 			<article class="page-content">
 		{foreach from=$keywords item=word }
