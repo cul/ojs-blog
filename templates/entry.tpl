@@ -28,7 +28,7 @@
 		<div class="col-md-8">
 			<article class="page-content">
 		{foreach from=$keywords item=word }
-						<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" path="$word"}">{$word}</a>
+						<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" args="$word"}">{$word}</a>
 		{/foreach}
 		</article>
 		</div>
