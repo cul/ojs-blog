@@ -38,7 +38,8 @@
 	{/fbvFormArea}	
 	{fbvFormArea id="tagitFields" class="border"}
 	{fbvFormSection label="common.keywords"}
-				{fbvElement type="keyword" id="keywords" current=$keywords }
+				{capture assign=keywordsSourceUrl}{url router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.blog.controllers.grid.BlogGridHandler" op="fetchChoices" list="sourcekeywords"}{/capture}
+				{fbvElement type="keyword" id="keywords"  sourceUrl=$keywordsSourceUrl current=$keywords }
 			{/fbvFormSection}		
 	{/fbvFormArea}	
 	{fbvFormSection class="formButtons"}

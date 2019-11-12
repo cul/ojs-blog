@@ -32,7 +32,7 @@ class BlogGridHandler extends GridHandler {
 		parent::__construct();
 		$this->addRoleAssignment(
 			array(ROLE_ID_MANAGER),
-			array('index', 'fetchGrid', 'fetchRow', 'addBlogEntry', 'editBlogEntry', 'updateBlogEntry', 'delete')
+			array('index', 'fetchGrid', 'fetchRow', 'addBlogEntry', 'editBlogEntry', 'updateBlogEntry', 'delete', 'fetchChoices')
 		);
 	}
 
@@ -191,6 +191,19 @@ class BlogGridHandler extends GridHandler {
 		$blogEntryDao->deleteObject($blogEntry);
 
 		return DAO::getDataChangedEvent();
+	}
+
+
+	/**
+	 * Retrieves a JSON list of available choices for a tagit metadata input field.
+	 * @param $args array
+	 * @param $request Request
+	 */
+	function fetchChoices($args, $request) {
+			$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
+			$keywords = $blogKeywordDao->getBlogKeywords($request->getContext()->getId());
+			header('Content-Type: text/json');
+			echo json_encode($keywords);
 	}
 
 

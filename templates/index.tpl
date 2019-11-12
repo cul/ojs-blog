@@ -19,6 +19,7 @@
 		<div class="col-md-8">
 			Filter by keyword: 
 		<select name="keyword" onchange='this.form.submit()'>
+		<option disabled selected value> -- select an option -- </option>
 		{foreach from=$keywords item=word }
 			<option value="{$word}" {if $word == $currentKeyword}selected{/if}>{$word}</option>
 		{/foreach}
@@ -59,7 +60,7 @@
 			<article class="page-content">
 		{assign var=entry_keywords value=$entry->getKeywords()}
 		{foreach from=$entry_keywords item=word }
-						<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" args="$word"}">{$word}</a>
+						<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" keyword="$word"}">{$word}</a>
 		{/foreach}
 		</article>
 		</div>
