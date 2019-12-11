@@ -35,16 +35,12 @@
 	<td class="value"><input type="text" id="byline" name="byline" value="{$byline}" size="20" maxlength="255" class="textField" /></td>
  </tr>
 	{/fbvFormSection}
-	{fbvFormSection label="plugins.generic.blog.datePosted" for="datePosted"}
-		<tr valign="top">	
-			{fbvElement type="text" id="datePosted" value=$datePosted size=$fbvStyles.size.SMALL class="datepicker"}
- 		</tr>			
-	{/fbvFormSection}
 	{/fbvFormArea}	
 	{fbvFormArea id="tagitFields" class="border"}
-        {fbvFormSection label="common.keywords"}
-                                {fbvElement type="keyword" id="keywords" current=$keywords }
-                        {/fbvFormSection}
+	{fbvFormSection label="common.keywords"}
+				{capture assign=keywordsSourceUrl}{url router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.blog.controllers.grid.BlogGridHandler" op="fetchChoices" list="sourcekeywords"}{/capture}
+				{fbvElement type="keyword" id="keywords"  sourceUrl=$keywordsSourceUrl current=$keywords }
+			{/fbvFormSection}		
 	{/fbvFormArea}	
 	{fbvFormSection class="formButtons"}
 		{assign var=buttonId value="submitFormButton"|concat:"-"|uniqid}
