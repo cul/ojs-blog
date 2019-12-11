@@ -57,7 +57,7 @@ class BlogEntryDAO extends DAO {
 	 * @return int Inserted blogEntryID
 	 */
 	function insertObject($blogEntry) {
-		$valArray = [(int) $blogEntry->getContextId(), $blogEntry->getTitle(), $blogEntry->getContent(), $blogEntry->getByline(), Core::getCurrentDate()];
+		$valArray = [(int) $blogEntry->getContextId(), $blogEntry->getTitle(), $blogEntry->getContent(), $blogEntry->getByline(), $blogEntry->getDatePosted()];
 
 		$this->update(
 		   'INSERT INTO blog_entries (context_id, title, content, byline, date_posted) VALUES (?,?,?,?,?)',
@@ -76,13 +76,14 @@ class BlogEntryDAO extends DAO {
 	function updateObject($blogEntry) {
 		$this->update(
 			'UPDATE	blog_entries
-			SET	context_id = ?, title = ?, content = ?, byline = ?  
+			SET	context_id = ?, title = ?, content = ?, byline = ?, date_posted = ?  
 			WHERE	entry_id = ?',
 			array(
 				(int) $blogEntry->getContextId(),
 				$blogEntry->getTitle(),
 				$blogEntry->getContent(),
 				$blogEntry->getByline(),
+				$blogEntry->getDatePosted(),
 				(int) $blogEntry->getId()
 			)
 		);

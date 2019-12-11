@@ -31,8 +31,8 @@ class BlogEntryForm extends Form {
 	 */
 	function __construct($blogPlugin, $contextId, $blogEntryId = null) {
 		//3.1.2?
-		//parent::__construct($blogPlugin->getTemplatePath() . ‘templates/editBlogEntryForm.tpl');
-		parent::__construct($blogPlugin->getTemplateResource('editBlogEntryForm.tpl'));
+		parent::__construct($blogPlugin->getTemplatePath() . 'templates/editBlogEntryForm.tpl');
+		//parent::__construct($blogPlugin->getTemplateResource('editBlogEntryForm.tpl'));
 
 		$this->contextId = $contextId;
 		$this->blogEntryId = $blogEntryId;
@@ -43,6 +43,7 @@ class BlogEntryForm extends Form {
 		$this->addCheck(new FormValidatorCSRF($this));
 		$this->addCheck(new FormValidator($this, 'title', 'required', 'plugins.generic.blog.nameRequired'));
 		$this->addCheck(new FormValidator($this, 'content', 'required', 'plugins.generic.blog.nameRequired'));
+		$this->addCheck(new FormValidator($this, 'datePosted', 'required', 'plugins.generic.blog.nameRequired'));
 		$form = $this;
 	}
 
@@ -58,6 +59,7 @@ class BlogEntryForm extends Form {
 			$this->setData('title', $blogEntry->getTitle());
 			$this->setData('content', $blogEntry->getContent());
 			$this->setData('byline', $blogEntry->getByline());
+			$this->setData('datePosted', $blogEntry->getDatePosted());
 			$this->setData('keywords', $blogKeywordDao->getKeywordsByEntryId($this->blogEntryId));
 		}
 	}
@@ -66,7 +68,7 @@ class BlogEntryForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('title', 'content', 'byline', 'keywords'));
+		$this->readUserVars(array('title', 'content', 'byline', 'keywords', 'datePosted'));
 	}
 
 	/**
@@ -99,7 +101,7 @@ class BlogEntryForm extends Form {
 		$blogEntry->setTitle($this->getData('title'));
 		$blogEntry->setContent($this->getData('content'));
 		$blogEntry->setByline($this->getData('byline'));
-
+		$blogEntry->setDatePosted($this->getData('datePosted'));
 		if ($this->blogEntryId) {
 			$blogEntryDao->updateObject($blogEntry);
 		} else {
