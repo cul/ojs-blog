@@ -47,6 +47,9 @@ class BlogKeywordDAO extends DAO {
 
 	function setKeywordsByEntryId($entryId, $keywords){
 		$k = $keywords['keywords'];
+		if(is_null($k)){
+			return;
+		}
 
 		//first clear entries
 		$this->update(
