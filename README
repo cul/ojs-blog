@@ -1,47 +1,15 @@
-===============================================
-=== PKP Static Pages Plugin
-=== Version: 1.2
-=== Author: Juan Pablo Alperin <pkp@alperin.ca>
-===============================================
+These are the steps for an individual journal to enable the blog plugin and create a link to it in the primary navigation menu.
 
-About
------
-This plugin is intended to provide very simple content management. It allows
-for the creation of static content pages with the assistance of an HTML editor.
+In the journal’s admin side panel, go to settings > website. Click on the plugins tab. Scroll down to find the blog plugin entry in the generic section and click enable.
 
-License
--------
-This plugin is licensed under the GNU General Public License v2. See the file
-COPYING for the complete terms of this license.
+Refresh the screen - a blog tab for adding posts should now appear at the top of the admin page. 
 
-System Requirements
--------------------
-This plugin is compatible with...
- - OJS 3.0.x
- - OMP 1.2.x
- - OMP 1.1.x
-It will NOT currently work with "path_info_disabled = On" in config.inc.php.
+Now go to the “navigation menus” tab to add a new navigation menu item: 
 
-Installation
-------------
-To install the plugin:
- - Unpack the plugin tar.gz file to your plugins/generic directory
- - From your application's installation directory, run the upgrade script:
-    $ php tools/upgrade.php upgrade
-   (NOTE: It is recommended to back up your database first.)
- - Enable the plugin by going to:
-   Management > Website Settings > Plugins > Generic Plugins
-   ...and selecting the Enable checkbox beside "Static Pages Plugin"
+ - The title should be the desired title of the blog
+ - The navigation menu type should be ‘Remote URL’
+ -  The url should be the full url for the journal (including the https:// part) plus ‘blog’:
+   (e.g for sample site: https://journals.org/index.php/sample_site/blog)
 
-Management
-----------
-New pages can be added/edited/deleted through the Plugin Management interface.
+Then go to Navigation Menus on the same page and click edit Primary Navigation Menu. Drag the blog title nav item from unassigned to the desired position in the assigned column and save.
 
-The PATH chosen for each page determines where the page is later accessed. To
-direct users to static content created with this plugin, place links to
-http://www.../index.php/pages/view/%PATH%, where %PATH% is a value you choose.
-
-Contact/Support
----------------
-Documentation, bug listings, and updates can be found on this plugin's homepage
-at <http://github.com/pkp/blog>.
