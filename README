@@ -9,7 +9,7 @@ Now go to the “navigation menus” tab to add a new navigation menu item:
  - The title should be the desired title of the blog
  - The navigation menu type should be ‘Remote URL’
  -  The url should be the full url for the journal (including the https:// part) plus ‘blog’:
-   (e.g for sample site: https://journals.org/index.php/sample_site/blog)
+   (e.g for sample site: https://sample_journals.org/index.php/sample_site/blog)
 
 Then go to Navigation Menus on the same page and click edit Primary Navigation Menu. Drag the blog title nav item from unassigned to the desired position in the assigned column and save.
 
