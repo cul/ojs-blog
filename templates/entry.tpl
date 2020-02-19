@@ -18,14 +18,14 @@
 		</div>
 	</div>
 	<div class="row justify-content-md-center blog-post-content">
-		<div class="col-md-10">
+		<div class="col-md-8">
 			<article class="page-content blog-post-content">
 			{$entry->getContent()}
     		</article>
 		</div>
 	</div>
 	<div class="row justify-content-md-center blog-post-tags">
-		<div class="col-md-10">
+		<div class="col-md-8">
 			<article class="page-content">
 		{foreach from=$keywords item=word }
 						<a class="btn" href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" args="$word"}">{$word}</a>
