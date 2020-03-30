@@ -42,7 +42,9 @@ class BlogEntryDAO extends DAO {
 		if ($keyword) $params[] = $keyword;
 
 		$result = $this->retrieveRange(
-			'SELECT distinct e.* FROM blog_entries e, blog_keywords k, blog_entries_keywords b WHERE e.context_id = ? '
+			'SELECT distinct e.* FROM blog_entries e'
+			. ($keyword?', blog_keywords k, blog_entries_keywords b':'')
+			. ' WHERE e.context_id = ? '
 			. ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ?':'')
 			.' order by e.date_posted desc',
 				$params
