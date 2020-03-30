@@ -48,19 +48,58 @@ class BlogHandler extends Handler {
 		$templateMgr = TemplateManager::getManager($request);
 		$context = $request->getContext();
 		$contextId = $context?$context->getId():CONTEXT_ID_NONE;
-
 		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
 		$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
-		$blogEntries = $blogEntryDao->getByContextId($context->getId(), $keyword)->toArray();
+
+		////
+		$page = isset($args[0]) ? (int) $args[0] : 1;
+		$count = 10;
+		$offset = $page > 1 ? ($page - 1) * $count : 0;
+		$paging_params = array(
+			'count' => $count,
+			'offset' => $offset,
+		);
+
+		$blogEntries = $blogEntryDao->getEntriesByContextId($context->getId(), $keyword, $paging_params)->toArray();
 		$blogKeywords = $blogKeywordDao->getBlogKeywords($context->getId());
+
+		////
+
+#####
+		$total = Services::get('blogpostssss')->getMax($params);
+#####
+		$showingStart = $offset + 1;
+		$showingEnd = min($offset + $count, $offset + count($issues));
+		$nextPage = $total > $showingEnd ? $page + 1 : null;
+		$prevPage = $showingStart > 1 ? $page - 1 : null;
+
+////
+////
+		$templateMgr->assign(array(
+			'issues' => $issues,
+			'showingStart' => $showingStart,
+			'showingEnd' => $showingEnd,
+			'total' => $total,
+			'nextPage' => $nextPage,
+			'prevPage' => $prevPage,
+		));
+///
+
 		$templateMgr->assign('entries', $blogEntries);
 		$templateMgr->assign('keywords', $blogKeywords);
 		if($keyword){
 			$templateMgr->assign('currentKeyword', $keyword);
 		}
+
+!!!!!!!!!!!!!!!!!!!!!!!!!
+//		$this->setupTemplate($request);
+//		$issues = iterator_to_array(Services::get('issue')->getMany($params));
+//		$total = Services::get('issue')->getMax($params);
+!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 		//3.1.2?
-		$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
-		//$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
+		//$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
+		$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
 	}
 
 	/**
