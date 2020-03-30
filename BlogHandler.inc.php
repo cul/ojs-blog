@@ -43,9 +43,8 @@ class BlogHandler extends Handler {
 		$keyword = null;
 		if($_GET['keyword']){
 			$keyword=$_GET['keyword'];
-		}else{
-			$keyword = $args[0];
 		}
+
 		$templateMgr = TemplateManager::getManager($request);
 		$context = $request->getContext();
 		$contextId = $context?$context->getId():CONTEXT_ID_NONE;
@@ -60,8 +59,8 @@ class BlogHandler extends Handler {
 			$templateMgr->assign('currentKeyword', $keyword);
 		}
 		//3.1.2?
-		//$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
-		$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
+		$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
+		//$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
 	}
 
 	/**

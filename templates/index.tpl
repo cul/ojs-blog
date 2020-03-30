@@ -55,7 +55,7 @@
 					<article class="page-content">
 						{assign var=entry_keywords value=$entry->getKeywords()}
 						{foreach from=$entry_keywords item=word }
-							<a href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" args="$word"}">{$word}</a>
+							<a href="{url router=$smarty.const.ROUTE_PAGE page="blog" op="index" keyword="$word"}">{$word}</a>
 						{/foreach}
 					</article>
 				</div>	
