@@ -64,28 +64,8 @@
 		
 		{/foreach}
 	
-<div>
-		{* Pagination *}
-		{if $prevPage > 1}
-			{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE  page="blog" op="index" path=$prevPage}{/capture}
-		{elseif $prevPage === 1}
-			{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE  page="blog" op="index"}{/capture}
-		{/if}
-		{if $nextPage}
-			{capture assign=nextUrl}{url router=$smarty.const.ROUTE_PAGE  page="blog" op="index" path=$nextPage}{/capture}
-		{/if}
-		{include
-			file="frontend/components/pagination.tpl"
-			prevUrl=$prevUrl
-			nextUrl=$nextUrl
-			showingStart=$showingStart
-			showingEnd=$showingEnd
-			total=$total
-		}
-</div>
-
-
 	</main>
+	
 {include file="frontend/components/footer.tpl"}
 
 
