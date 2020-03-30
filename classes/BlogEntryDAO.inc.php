@@ -37,9 +37,10 @@ class BlogEntryDAO extends DAO {
 	 * @param $rangeInfo Object optional
 	 * @return DAOResultFactory
 	 */
-	function getByContextId($contextId, $keyword = null) {
+	function getEntriesByContextId($contextId, $keyword = null, $paging_params) {
 		$params = array((int) $contextId);
 		if ($keyword) $params[] = $keyword;
+		params[] = $paging_params;
 
 		$result = $this->retrieveRange(
 			'SELECT distinct e.* FROM blog_entries e'
