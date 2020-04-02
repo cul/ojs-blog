@@ -41,7 +41,7 @@ class BlogHandler extends Handler {
 	 */
 	function index($args, $request) {
 		$keyword = null;
-		if($_GET['keyword']){
+		if(isset($_GET['keyword'])){
 			$keyword=$_GET['keyword'];
 		}
 
@@ -66,17 +66,16 @@ class BlogHandler extends Handler {
 		////
 
 #####
-		$total = Services::get('blogpostssss')->getMax($params);
+		$total = 100; //Services::get('blogpostsss')->getMax($params);
 #####
 		$showingStart = $offset + 1;
-		$showingEnd = min($offset + $count, $offset + count($issues));
+		$showingEnd = min($offset + $count, $offset + count($blogEntries));
 		$nextPage = $total > $showingEnd ? $page + 1 : null;
 		$prevPage = $showingStart > 1 ? $page - 1 : null;
 
 ////
 ////
 		$templateMgr->assign(array(
-			'issues' => $issues,
 			'showingStart' => $showingStart,
 			'showingEnd' => $showingEnd,
 			'total' => $total,
