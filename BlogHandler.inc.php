@@ -51,30 +51,23 @@ class BlogHandler extends Handler {
 		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
 		$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
 
-		////
 		$page = isset($args[0]) ? (int) $args[0] : 1;
 		$count = 10;
 		$offset = $page > 1 ? ($page - 1) * $count : 0;
 		$paging_params = array(
-			'count' => $count,
 			'offset' => $offset,
+			'count' => $count
 		);
 
-		$blogEntries = $blogEntryDao->getEntriesByContextId($context->getId(), $keyword, $paging_params)->toArray();
-		$blogKeywords = $blogKeywordDao->getBlogKeywords($context->getId());
+		$blogEntries = $blogEntryDao->getEntriesByContextId($contextId, $keyword, $paging_params)->toArray();
+		$blogKeywords = $blogKeywordDao->getBlogKeywords($contextId);
 
-		////
-
-#####
-		$total = 100; //Services::get('blogpostsss')->getMax($params);
-#####
+		$total = $blogEntryDao->getCountByContextId($contextId, $keyword); 
 		$showingStart = $offset + 1;
 		$showingEnd = min($offset + $count, $offset + count($blogEntries));
 		$nextPage = $total > $showingEnd ? $page + 1 : null;
 		$prevPage = $showingStart > 1 ? $page - 1 : null;
 
-////
-////
 		$templateMgr->assign(array(
 			'showingStart' => $showingStart,
 			'showingEnd' => $showingEnd,
@@ -82,7 +75,6 @@ class BlogHandler extends Handler {
 			'nextPage' => $nextPage,
 			'prevPage' => $prevPage,
 		));
-///
 
 		$templateMgr->assign('entries', $blogEntries);
 		$templateMgr->assign('keywords', $blogKeywords);
@@ -90,15 +82,9 @@ class BlogHandler extends Handler {
 			$templateMgr->assign('currentKeyword', $keyword);
 		}
 
-!!!!!!!!!!!!!!!!!!!!!!!!!
-//		$this->setupTemplate($request);
-//		$issues = iterator_to_array(Services::get('issue')->getMany($params));
-//		$total = Services::get('issue')->getMax($params);
-!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 		//3.1.2?
-		//$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
-		$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
+		$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
+		//$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
 	}
 
 	/**
@@ -114,8 +100,8 @@ class BlogHandler extends Handler {
 		$blogEntry = $blogEntryDao->getById($id);
 		$templateMgr->assign('entry', $blogEntry);
 		$templateMgr->assign('keywords', $blogEntry->getKeywords());
-	//	$templateMgr->display(self::$plugin->getTemplateResource('entry.tpl'));
-		$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/entry.tpl');
+		$templateMgr->display(self::$plugin->getTemplateResource('entry.tpl'));
+		//$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/entry.tpl');
 	}
 }
 

@@ -34,20 +34,20 @@ class BlogEntryDAO extends DAO {
 	/**
 	 * Get a set of blog entries by context ID
 	 * @param $contextId int
-	 * @param $rangeInfo Object optional
 	 * @return DAOResultFactory 
 	 */
-	function getEntriesByContextId($contextId, $keyword = null, $paging_params) {
+	function getEntriesByContextId($contextId, $keyword = null, $paging_params = null) {
 		$params = array((int) $contextId);
 		if ($keyword) $params[] = $keyword;
-		$params = array_merge($params, $paging_params);
+		if ($paging_params) $params = array_merge($params, $paging_params);
 
 		$result = $this->retrieveRange(
 			'SELECT distinct e.* FROM blog_entries e'
 			. ($keyword?', blog_keywords k, blog_entries_keywords b':'')
 			. ' WHERE e.context_id = ? '
 			. ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ?':'')
-			.' order by e.date_posted desc',
+			.' order by e.date_posted desc '
+			. ($paging_params?'limit ?, ?':''),
 				$params
 		);
 
@@ -163,7 +163,22 @@ class BlogEntryDAO extends DAO {
 		$this->setData('datePosted', $datetimePosted);
 	}
 
+	function getCountByContextId($contextId, $keyword){	
+		$params = array((int) $contextId);
+		if ($keyword) $params[] = $keyword;
+		$result = $this->retrieve(
+			'SELECT	COUNT(*) FROM blog_entries e '
+			. ($keyword?', blog_keywords k, blog_entries_keywords b ':'')
+			. ' WHERE e.context_id = ? '
+			. ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ? ':''),
+			$params
+		);
 
+		$returner = $result->fields[0];
+		$result->Close();
+		return $returner;
+		
+	}
 
 
 }
