@@ -14,6 +14,7 @@
 			</div>
 		</header>
 		
+		{if $keywords|@count > 0}
 		<div class="filter-box">
 			<form method="get">
 				Filter by keyword: 
@@ -24,6 +25,7 @@
 				</select>
 			</form>
 		</div>
+		{/if}
 		
 		{foreach from=$entries item=entry}        
 		
@@ -67,12 +69,12 @@
 <div>
 		{* Pagination *}
 		{if $prevPage > 1}
-			{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE  page="blog" op="index" path=$prevPage}{/capture}
+			{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE  page="blog" op="index"  keyword="$currentKeyword" path=$prevPage}{/capture}
 		{elseif $prevPage === 1}
-			{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE  page="blog" op="index"}{/capture}
+			{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE page="blog" op="index"  keyword="$currentKeyword"}{/capture}
 		{/if}
 		{if $nextPage}
-			{capture assign=nextUrl}{url router=$smarty.const.ROUTE_PAGE  page="blog" op="index" path=$nextPage}{/capture}
+			{capture assign=nextUrl}{url router=$smarty.const.ROUTE_PAGE  page="blog" op="index" keyword="$currentKeyword" path=$nextPage}{/capture}
 		{/if}
 		{include
 			file="frontend/components/pagination.tpl"
