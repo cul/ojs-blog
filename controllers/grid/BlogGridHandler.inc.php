@@ -62,7 +62,7 @@ class BlogGridHandler extends GridHandler {
 
 		// Get the pages and add the data to the grid
 		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
-		$this->setGridDataElements($blogEntryDao->getByContextId($context->getId()));
+		$this->setGridDataElements($blogEntryDao->getEntriesByContextId($context->getId()));
 
 		// Add grid-level actions
 		$router = $request->getRouter();
