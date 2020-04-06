@@ -82,9 +82,7 @@ class BlogHandler extends Handler {
 			$templateMgr->assign('currentKeyword', $keyword);
 		}
 
-		//3.1.2?
 		$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/index.tpl');
-		//$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
 	}
 
 	/**
@@ -100,8 +98,7 @@ class BlogHandler extends Handler {
 		$blogEntry = $blogEntryDao->getById($id);
 		$templateMgr->assign('entry', $blogEntry);
 		$templateMgr->assign('keywords', $blogEntry->getKeywords());
-		$templateMgr->display(self::$plugin->getTemplateResource('entry.tpl'));
-		//$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/entry.tpl');
+		$templateMgr->display(self::$plugin->getTemplatePath() . 'templates/entry.tpl');
 	}
 }
 

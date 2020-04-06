@@ -31,8 +31,7 @@ class BlogEntryForm extends Form {
 	 */
 	function __construct($blogPlugin, $contextId, $blogEntryId = null) {
 		//3.1.2?
-		//parent::__construct($blogPlugin->getTemplatePath() . 'templates/editBlogEntryForm.tpl');
-		parent::__construct($blogPlugin->getTemplateResource('editBlogEntryForm.tpl'));
+		parent::__construct($blogPlugin->getTemplatePath() . 'templates/editBlogEntryForm.tpl');
 
 		$this->contextId = $contextId;
 		$this->blogEntryId = $blogEntryId;
