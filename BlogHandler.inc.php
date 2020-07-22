@@ -9,6 +9,7 @@
  */
 
 import('classes.handler.Handler');
+import('lib.pkp.classes.db.DBResultRange');
 
 class BlogHandler extends Handler {
 	/** @var blogPlugin The blog plugin */
@@ -54,12 +55,10 @@ class BlogHandler extends Handler {
 		$page = isset($args[0]) ? (int) $args[0] : 1;
 		$count = 10;
 		$offset = $page > 1 ? ($page - 1) * $count : 0;
-		$paging_params = array(
-			'offset' => $offset,
-			'count' => $count
-		);
+		$dbResultRange = new DBResultRange($count, $page);
 
-		$blogEntries = $blogEntryDao->getEntriesByContextId($contextId, $keyword, $paging_params)->toArray();
+
+		$blogEntries = $blogEntryDao->getEntriesByContextId($contextId, $keyword, $dbResultRange)->toArray();
 		$blogKeywords = $blogKeywordDao->getBlogKeywords($contextId);
 
 		$total = $blogEntryDao->getCountByContextId($contextId, $keyword); 

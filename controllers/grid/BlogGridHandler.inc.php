@@ -32,7 +32,7 @@ class BlogGridHandler extends GridHandler {
 		parent::__construct();
 		$this->addRoleAssignment(
 			array(ROLE_ID_MANAGER),
-			array('index', 'fetchGrid', 'fetchRow', 'addBlogEntry', 'editBlogEntry', 'updateBlogEntry', 'delete')
+			array('index', 'fetchGrid', 'fetchRows', 'fetchRow', 'addBlogEntry', 'editBlogEntry', 'updateBlogEntry', 'delete')
 		);
 	}
 
@@ -49,20 +49,47 @@ class BlogGridHandler extends GridHandler {
 		return parent::authorize($request, $args, $roleAssignments);
 	}
 
+
+
+	protected function loadData($request, $filter) {
+
+		$context = $request->getContext();
+		$rangeInfo = $this->getGridRangeInfo($request, $this->getId());
+
+                // Get the pages and add the data to the grid
+                $blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
+                return $blogEntryDao->getEntriesByContextId($context->getId(), null, $rangeInfo);
+                
+                //$total = $blogEntryDao->getCountByContextId($context->getId(), null);
+
+}
 	/**
 	 * @copydoc GridHandler::initialize()
 	 */
 	function initialize($request, $args = null) {
 		parent::initialize($request, $args);
 		$context = $request->getContext();
+		$count = 50;
+		//$offset = $offset > 1 ? ($offset - 1) * $count : 0;
+		$offset = 0;
+		$paging_params = array(
+			'offset' => $offset,
+			'count' => $count
+		);
 
 		// Set the grid details.
 		$this->setTitle('plugins.generic.blog.blog');
 		$this->setEmptyRowText('plugins.generic.blog.noneCreated');
 
 		// Get the pages and add the data to the grid
-		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
-		$this->setGridDataElements($blogEntryDao->getEntriesByContextId($context->getId()));
+		//$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
+		//$this->setGridDataElements($blogEntryDao->getEntriesByContextId($context->getId()));
+
+		//$total = $blogEntryDao->getCountByContextId($context->getId(), null); 
+		//$templateMgr->assign(array(
+		//	'total' => $total,
+		//));
+
 
 		// Add grid-level actions
 		$router = $request->getRouter();
@@ -95,6 +122,19 @@ class BlogGridHandler extends GridHandler {
 	//
 	// Overridden methods from GridHandler
 	//
+
+
+	/**
+	 * @copydoc GridHandler::initFeatures()
+	 */
+	function initFeatures($request, $args) {
+		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
+		$contextId = $request->getContext()->getId();
+		import('lib.pkp.classes.controllers.grid.feature.PagingFeature');
+		return array(new PagingFeature());
+	}
+
+
 	/**
 	 * @copydoc GridHandler::getRowInstance()
 	 */
