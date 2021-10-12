@@ -147,14 +147,6 @@ class BlogPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Get the filename of the ADODB schema for this plugin.
-	 * @return string Full path and filename to schema descriptor.
-	 */
-	function getInstallSchemaFile() {
-		return $this->getPluginPath() . '/schema.xml';
-	}
-
-	/**
 	 * Get the JavaScript URL for this plugin.
 	 */
 	function getJavaScriptURL($request) {
