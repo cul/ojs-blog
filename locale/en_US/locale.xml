@@ -1,44 +1,81 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-09-27T09:54:38-07:00\n"
+"PO-Revision-Date: 2021-09-27T09:54:38-07:00\n"
+"Language: \n"
 
-<!--
-  * locale/en_US/locale.xml
-  *
-  * Copyright (c) 2014-2019 Simon Fraser University
-  * Copyright (c) 2003-2019 John Willinsky
-  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
-  *
-  * Localization strings
-  -->
- 
-<locale name="en_US" full_name="U.S. English">
-	<message key="plugins.generic.blog.displayName">Blog Plugin</message>
-	<message key="plugins.generic.blog.description">This plugin allows Blog Content Management.</message>
-	<message key="plugins.generic.blog.blog">Blog</message>
-	<message key="plugins.generic.blog.pageTitle">Title</message>
-	<message key="plugins.generic.blog.content">Content</message>
-	<message key="plugins.generic.blog.byline">Authors</message>
-	<message key="plugins.generic.blog.datePosted">Date Posted</message>
-	<message key="plugins.generic.blog.keyword">Keyword</message>
+msgid  "plugins.generic.blog.displayName
+"msgstr "Blog Plugin"
 
-	<message key="plugins.generic.blog.requirement.tinymce"><![CDATA[<p><strong>The TinyMCE Plugin must be installed and enabled in order to add/edit content.</strong></p>]]></message>
+msgid  "plugins.generic.blog.description"
+msgstr "This plugin allows Blog Content Management."
 
-	<message key="plugins.generic.blog.editAddContent">Edit/Add Content</message>
+msgid  "plugins.generic.blog.blog"
+msgstr "Blog"
 
-	<message key="plugins.generic.blog.addBlogEntry">Add Blog Entry</message>
-	<message key="plugins.generic.blog.addNewBlogEntry">Add Blog Entry</message>	
-	<message key="plugins.generic.blog.addNewBlogKeywordEntry">Add New Keyword</message>
-	<message key="plugins.generic.blog.editBlogEntry">Edit Blog Entry</message>	
-	<message key="plugins.generic.blog.noneCreated">No blog entries have been created.</message>
+msgid  "plugins.generic.blog.pageTitle"
+msgstr "Title"
 
-	<message key="plugins.generic.blog.settingInstructions">The form below shows you all the blog entries you have created.  You can edit or delete the entries using the links on the right-hand side.</message>
-	<message key="plugins.generic.blog.editInstructions">Use the form below to add/edit blog content.</message>
-	<message key="plugins.generic.blog.pathRegEx">The path field must contain only alphanumeric characters plus '.', '/', '-', and '_'.</message>
-	<message key="plugins.generic.blog.viewInstructions"><![CDATA[<p>This page will be accessible at: <blockquote>{$pagesPath}</blockquote>...where %PATH% is the path entered above. <strong>Note:</strong> No two pages can have the same path. Using paths that are built into the system may cause you to lose access to important functions.</p>]]></message>
-	<message key="plugins.generic.blog.duplicatePath">This path already exists for another blog entry.</message>
+msgid  "plugins.generic.blog.content"
+msgstr "Content"
+
+msgid  "plugins.generic.blog.byline"
+msgstr "Authors"
+
+msgid  "plugins.generic.blog.datePosted"
+msgstr "Date Posted"
+
+msgid  "plugins.generic.blog.keyword"
+msgstr "Keyword"
+
+msgid  "plugins.generic.blog.requirement.tinymce"
+msgstr "<![CDATA[<p><strong>The TinyMCE Plugin must be installed and enabled in order to add/edit content.</strong></p>]]>"
+
+msgid  "plugins.generic.blog.editAddContent"
+msgstr "Edit/Add Content"
+
+msgid  "plugins.generic.blog.addBlogEntry"
+msgstr "Add Blog Entry"
+
+msgid  "plugins.generic.blog.addNewBlogEntry"
+msgstr "Add Blog Entry"	
+
+msgid  "plugins.generic.blog.addNewBlogKeywordEntry"
+msgstr "Add New Keyword"
+
+msgid  "plugins.generic.blog.editBlogEntry"
+msgstr "Edit Blog Entry"	
+
+msgid  "plugins.generic.blog.noneCreated"
+msgstr "No blog entries have been created."
+
+msgid  "plugins.generic.blog.settingInstructions"
+msgstr "The form below shows you all the blog entries you have created.  You can edit or delete the entries using the links on the right-hand side."
+
+msgid  "plugins.generic.blog.editInstructions"
+msgstr "Use the form below to add/edit blog content."
+
+msgid  "plugins.generic.blog.pathRegEx"
+msgstr "The path field must contain only alphanumeric characters plus '.', '/', '-', and '_'."
+
+msgid  "plugins.generic.blog.viewInstructions"
+msgstr "<![CDATA[<p>This page will be accessible at: <blockquote>{$pagesPath}</blockquote>...where %PATH% is the path entered above. <strong>Note:</strong> No two pages can have the same path. Using paths that are built into the system may cause you to lose access to important functions.</p>]]>"
+
+msgid  "plugins.generic.blog.duplicatePath"
+msgstr "This path already exists for another blog entry."
 	
-	<message key="plugins.generic.blog.pageSaved">Entry successfully saved.</message>
-	<message key="plugins.generic.blog.pageDeleted">Entry successfully deleted.</message>
+msgid  "plugins.generic.blog.pageSaved"
+msgstr "Entry successfully saved."
+
+msgid  "plugins.generic.blog.pageDeleted"
+msgstr "Entry successfully deleted."
 	
-	<message key="plugins.generic.blog.noneExist">No blog entries have been created</message>
-</locale>
+msgid  "plugins.generic.blog.noneExist"
+msgstr "No blog entries have been created"
