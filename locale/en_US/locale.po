@@ -1,0 +1,81 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-09-27T09:54:38-07:00\n"
+"PO-Revision-Date: 2021-09-27T09:54:38-07:00\n"
+"Language: \n"
+
+msgid  "plugins.generic.blog.displayName"
+msgstr "Blog Plugin"
+
+msgid  "plugins.generic.blog.description"
+msgstr "This plugin allows Blog Content Management."
+
+msgid  "plugins.generic.blog.blog"
+msgstr "Blog"
+
+msgid  "plugins.generic.blog.pageTitle"
+msgstr "Title"
+
+msgid  "plugins.generic.blog.content"
+msgstr "Content"
+
+msgid  "plugins.generic.blog.byline"
+msgstr "Authors"
+
+msgid  "plugins.generic.blog.datePosted"
+msgstr "Date Posted"
+
+msgid  "plugins.generic.blog.keyword"
+msgstr "Keyword"
+
+msgid  "plugins.generic.blog.requirement.tinymce"
+msgstr "<![CDATA[<p><strong>The TinyMCE Plugin must be installed and enabled in order to add/edit content.</strong></p>]]>"
+
+msgid  "plugins.generic.blog.editAddContent"
+msgstr "Edit/Add Content"
+
+msgid  "plugins.generic.blog.addBlogEntry"
+msgstr "Add Blog Entry"
+
+msgid  "plugins.generic.blog.addNewBlogEntry"
+msgstr "Add Blog Entry"	
+
+msgid  "plugins.generic.blog.addNewBlogKeywordEntry"
+msgstr "Add New Keyword"
+
+msgid  "plugins.generic.blog.editBlogEntry"
+msgstr "Edit Blog Entry"	
+
+msgid  "plugins.generic.blog.noneCreated"
+msgstr "No blog entries have been created."
+
+msgid  "plugins.generic.blog.settingInstructions"
+msgstr "The form below shows you all the blog entries you have created.  You can edit or delete the entries using the links on the right-hand side."
+
+msgid  "plugins.generic.blog.editInstructions"
+msgstr "Use the form below to add/edit blog content."
+
+msgid  "plugins.generic.blog.pathRegEx"
+msgstr "The path field must contain only alphanumeric characters plus '.', '/', '-', and '_'."
+
+msgid  "plugins.generic.blog.viewInstructions"
+msgstr "<![CDATA[<p>This page will be accessible at: <blockquote>{$pagesPath}</blockquote>...where %PATH% is the path entered above. <strong>Note:</strong> No two pages can have the same path. Using paths that are built into the system may cause you to lose access to important functions.</p>]]>"
+
+msgid  "plugins.generic.blog.duplicatePath"
+msgstr "This path already exists for another blog entry."
+	
+msgid  "plugins.generic.blog.pageSaved"
+msgstr "Entry successfully saved."
+
+msgid  "plugins.generic.blog.pageDeleted"
+msgstr "Entry successfully deleted."
+	
+msgid  "plugins.generic.blog.noneExist"
+msgstr "No blog entries have been created"
