@@ -53,8 +53,7 @@ class BlogPlugin extends GenericPlugin {
 				DAORegistry::registerDAO('BlogKeywordDAO', $blogKeywordDao);
 
 
-				HookRegistry::register('Templates::Management::Settings::website', array($this, 'callbackShowWebsiteSettingsTabs'));
-
+				HookRegistry::register('Templates::Settings::website', [$this, 'callbackShowWebsiteSettingsTabs']);
 				// Intercept the LoadHandler hook to present
 				// blog entries when requested.
 				HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
