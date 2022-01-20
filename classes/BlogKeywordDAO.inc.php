@@ -21,23 +21,28 @@ class BlogKeywordDAO extends DAO {
 		return $this->_getInsertId('blog_keywords', 'keyword_id');
 	}
 
+	function getKeyword($row){
+		return $row['keyword'];
+	}
+
+        function getKeywordId($row){
+                return $row['keyword_id'];
+        }
+
 
 	function getKeywordsByEntryId($entryId){
 			$kw =[];
 			$keywords = [];
-			$result = $this->retrieve(
-				'SELECT keyword_id FROM blog_entries_keywords WHERE entry_id = ?',
-				$entryId
-			);
-			if ($result->RecordCount() != 0) {
-				while (!$result->EOF) {
-					$row = $result->GetRowAssoc(false);
-					$kidres = $this->retrieve(
-						'SELECT keyword FROM blog_keywords WHERE keyword_id = ?',
-						$row['keyword_id']
-					);
-					$kw[] = $kidres->GetRows()[0]['keyword'];
-					$result->MoveNext();
+			$sql = 'SELECT k.keyword FROM blog_entries_keywords b, blog_keywords k WHERE b.entry_id = ? and b.keyword_id=k.keyword_id';
+			$params = [$entryId];
+			$result = $this->retrieve($sql, $params);
+
+			$resultFactory = new DAOResultFactory($result, $this, 'getKeyword', [], $sql, $params); 			
+
+			if ($resultFactory->getCount() != 0) {
+				while (!$resultFactory->eof()) {
+					$keyword = $resultFactory->next();
+					$kw[] = $keyword;
 				}
 			}
 			$keywords['en_US'] = $kw;
@@ -54,26 +59,29 @@ class BlogKeywordDAO extends DAO {
 		//first clear entries
 		$this->update(
 		   			'DELETE FROM blog_entries_keywords where entry_id = ?',
-					$entryId
+					[$entryId]
 				);
 
 		//now update new values
 		foreach($k as $keyword){
+			$sql = 'SELECT keyword_id FROM blog_keywords WHERE keyword = ?';
+                        $params = [$keyword];
 			$result = $this->retrieve(
-				'SELECT keyword_id FROM blog_keywords WHERE keyword = ?',
-				$keyword
+				$sql,
+				$params
 			);
-			if ($result->RecordCount() != 0) {	
-				$keywordId = $result->GetRows(1,0)[0]['keyword_id'];
+                        $resultFactory = new DAOResultFactory($result, $this, 'getKeywordId', [], $sql, $params);
+			if ($resultFactory->getCount() != 0) {	
+                                $keywordId = $resultFactory->next();
 				$valArray = [$entryId, $keywordId];
 				$this->update(
-		   			'INSERT INTO blog_entries_keywords (entry_id, keyword_id) VALUES (?,?)',
-					$valArray
+		   		  'INSERT INTO blog_entries_keywords (entry_id, keyword_id) VALUES (?,?)',
+				  $valArray
 				);
 			}else{
 				$this->update(
 		   			'INSERT INTO blog_keywords (keyword) VALUES (?)',
-					$keyword
+					[$keyword]
 				);
 				$valArray = [$entryId, $this->getInsertId()];
 				$this->update(
@@ -87,17 +95,20 @@ class BlogKeywordDAO extends DAO {
 	function getBlogKeywords($contextId){
 			$kw =[];
 			$keywords = [];
-			$result = $this->retrieve(
-				'SELECT distinct k.keyword as keyword FROM blog_keywords k, blog_entries_keywords b, blog_entries e WHERE e.context_id = ? and k.keyword_id=b.keyword_id and b.entry_id=e.entry_id',
-				$contextId
-			);
-			if ($result->RecordCount() != 0) {
-				while (!$result->EOF) {
-					$row = $result->GetRowAssoc(false);
-					$kw[] = $row['keyword'];
-					$result->MoveNext();
-				}
-			}
+			$sql = 'SELECT distinct k.keyword as keyword FROM blog_keywords k, blog_entries_keywords b, blog_entries e WHERE e.context_id = ? and k.keyword_id=b.keyword_id and b.entry_id=e.entry_id';
+			$params = [$contextId];
+                        $result = $this->retrieve(
+                                $sql,
+                                $params
+                        );
+                        $resultFactory = new DAOResultFactory($result, $this, 'getKeyword', [], $sql, $params);
+                        if ($resultFactory->getCount() != 0) {
+                                while (!$resultFactory->eof()) {
+                                        $keyword = $resultFactory->next();
+                                        $kw[] = $keyword;
+                                }
+                        }
+                        //$keywords['en_US'] = $kw;
 			return $kw;
 	} 
 

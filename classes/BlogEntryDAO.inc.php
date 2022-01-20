@@ -21,13 +21,15 @@ class BlogEntryDAO extends DAO {
 	 */
 	function getById($blogEntryId) {
 		$params = array((int) $blogEntryId);
-		$result = $this->retrieve('SELECT * FROM blog_entries WHERE entry_id = ?',
-			$params);
+		$sql = 'SELECT * FROM blog_entries WHERE entry_id = ?';
+		$result = $this->retrieve($sql, $params);
+                
+		$resultFactory = new DAOResultFactory($result, $this, '_fromRow', [], $sql, $params);
 		$returner = null;
-		if ($result->RecordCount() != 0) {
-			$returner = $this->_fromRow($result->GetRowAssoc(false));
-		}
-		$result->Close();
+                if ($resultFactory->getCount() != 0) {
+                    $returner = $resultFactory->next();
+                }
+
 		return $returner;
 	}
 
@@ -39,19 +41,17 @@ class BlogEntryDAO extends DAO {
 	function getEntriesByContextId($contextId, $keyword = null, $paging_params = null) {
 		$params = array((int) $contextId);
 		if ($keyword) $params[] = $keyword;
-		if ($paging_params) $params = array_merge($params, $paging_params);
-
-		$result = $this->retrieveRange(
-			'SELECT distinct e.* FROM blog_entries e'
+		$paging_sql = '';
+		if ($paging_params) $paging_sql = 'limit '.$paging_params['offset'].', '.$paging_params['count'];
+		$sql = 'SELECT distinct e.* FROM blog_entries e'
 			. ($keyword?', blog_keywords k, blog_entries_keywords b':'')
 			. ' WHERE e.context_id = ? '
 			. ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ?':'')
 			.' order by e.date_posted desc '
-			. ($paging_params?'limit ?, ?':''),
-				$params
-		);
+			.$paging_sql;
+		$result = $this->retrieve($sql, $params);
 
-		return new DAOResultFactory($result, $this, '_fromRow');
+		return new DAOResultFactory($result, $this, '_fromRow', [], $sql, $params);
 	}
 
 	/**
@@ -99,7 +99,7 @@ class BlogEntryDAO extends DAO {
 	function deleteById($entryId) {
 		$this->update(
 			'DELETE FROM blog_entries WHERE entry_id = ?',
-			(int) $entryId
+			[(int) $entryId]
 		);
 	}
 
@@ -117,6 +117,11 @@ class BlogEntryDAO extends DAO {
 	 */
 	function newDataObject() {
 		return new BlogEntry();
+	}
+
+
+	function _getCount($row){
+	  return $row['COUNT(*)'];
 	}
 
 	/**
@@ -166,16 +171,13 @@ class BlogEntryDAO extends DAO {
 	function getCountByContextId($contextId, $keyword){	
 		$params = array((int) $contextId);
 		if ($keyword) $params[] = $keyword;
-		$result = $this->retrieve(
-			'SELECT	COUNT(*) FROM blog_entries e '
-			. ($keyword?', blog_keywords k, blog_entries_keywords b ':'')
-			. ' WHERE e.context_id = ? '
-			. ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ? ':''),
-			$params
-		);
-
-		$returner = $result->fields[0];
-		$result->Close();
+		$sql = 'SELECT COUNT(*) FROM blog_entries e '
+                        . ($keyword?', blog_keywords k, blog_entries_keywords b ':'')
+                        . ' WHERE e.context_id = ? '
+                        . ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ? ':'');
+		$result = $this->retrieve($sql, $params);
+                $resultFactory = new DAOResultFactory($result, $this, '_getCount', [], $sql, $params);
+		$returner = $resultFactory->next();
 		return $returner;
 		
 	}
