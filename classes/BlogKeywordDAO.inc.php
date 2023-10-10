@@ -92,11 +92,15 @@ class BlogKeywordDAO extends DAO {
 		}
 	}
 
-	function getBlogKeywords($contextId){
+
+	function getBlogKeywords($contextId, $year){
 			$kw =[];
 			$keywords = [];
-			$sql = 'SELECT distinct k.keyword as keyword FROM blog_keywords k, blog_entries_keywords b, blog_entries e WHERE e.context_id = ? and k.keyword_id=b.keyword_id and b.entry_id=e.entry_id';
+			$sql = 'SELECT distinct k.keyword as keyword FROM blog_keywords k, blog_entries_keywords b, blog_entries e WHERE e.context_id = ? and k.keyword_id=b.keyword_id and b.entry_id=e.entry_id '
+			. ($year?' and year(e.date_posted)= ? ':'')
+			.'  order by k.keyword';
 			$params = [$contextId];
+                	if ($year) $params[] = $year;
                         $result = $this->retrieve(
                                 $sql,
                                 $params

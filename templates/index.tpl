@@ -13,19 +13,32 @@
 				 <!-- description can go here -->
 			</div>
 		</header>
-		
-		{if $keywords|@count > 0}
-		<div class="filter-box">
-			<form method="get">
-				Filter by keyword: 
-				<select name="keyword" onchange='this.form.submit()'>
-					{foreach from=$keywords item=word }
-						<option value="{$word}" {if $word == $currentKeyword}selected{/if}>{$word}</option>
-					{/foreach}
-				</select>
-			</form>
-		</div>
+
+               <form method="get">
+                {if $keywords|@count > 0}
+                <span class="filter-box"  style="border: none;">
+                                Filter by keyword:
+                                <select name="keyword" onchange='this.form.submit()'>
+                                        <option></option>
+                                        {foreach from=$keywords item=word }
+                                                <option value="{$word}" {if $word == $currentKeyword}selected{/if}>{$word}</option>
+                                        {/foreach}
+                                </select>
+
+                </span>
+                {/if}
+                {if $years|@count > 0}
+               <span class="filter-box"  style="border: none;">
+                                Filter by year:
+                                <select name="year" onchange='this.form.submit()'>
+                                        <option></option>
+                                        {foreach from=$years item=year }
+                                                <option value="{$year}" {if $year == $selectedYear}selected{/if}>{$year}</option>
+                                        {/foreach}
+                                </select>
+                </span>		
 		{/if}
+		</form>
 		
 		{foreach from=$entries item=entry}        
 		

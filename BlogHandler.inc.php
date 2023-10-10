@@ -10,6 +10,7 @@
 
 import('classes.handler.Handler');
 
+
 class BlogHandler extends Handler {
 	/** @var blogPlugin The blog plugin */
 	static $plugin;
@@ -44,6 +45,11 @@ class BlogHandler extends Handler {
 		if(isset($_GET['keyword'])){
 			$keyword=$_GET['keyword'];
 		}
+                $year = null;
+                if(isset($_GET['year'])){
+                        $year=$_GET['year'];
+                }
+
 
 		$templateMgr = TemplateManager::getManager($request);
 		$context = $request->getContext();
@@ -59,15 +65,16 @@ class BlogHandler extends Handler {
 			'count' => $count
 		);
 
-		$blogEntries = $blogEntryDao->getEntriesByContextId($contextId, $keyword, $paging_params)->toArray();
-		$blogKeywords = $blogKeywordDao->getBlogKeywords($contextId);
+		$blogEntries = $blogEntryDao->getEntriesByContextId($contextId, $keyword, $year, $paging_params)->toArray();
+		$years = $blogEntryDao->getEntryYears($contextId, $keyword);
+		$blogKeywords = $blogKeywordDao->getBlogKeywords($contextId, $year);
 
-		$total = $blogEntryDao->getCountByContextId($contextId, $keyword); 
+		$total = $blogEntryDao->getCountByContextId($contextId, $keyword, $year); 
 		$showingStart = $offset + 1;
 		$showingEnd = min($offset + $count, $offset + count($blogEntries));
 		$nextPage = $total > $showingEnd ? $page + 1 : null;
 		$prevPage = $showingStart > 1 ? $page - 1 : null;
-
+		
 		$templateMgr->assign(array(
 			'showingStart' => $showingStart,
 			'showingEnd' => $showingEnd,
@@ -81,6 +88,10 @@ class BlogHandler extends Handler {
 		if($keyword){
 			$templateMgr->assign('currentKeyword', $keyword);
 		}
+                $templateMgr->assign('years', $years);
+                if($year){
+                        $templateMgr->assign('selectedYear', $year);
+                }
 
 		$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
 	}
