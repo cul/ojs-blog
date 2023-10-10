@@ -38,21 +38,39 @@ class BlogEntryDAO extends DAO {
 	 * @param $contextId int
 	 * @return DAOResultFactory 
 	 */
-	function getEntriesByContextId($contextId, $keyword = null, $paging_params = null) {
+	function getEntriesByContextId($contextId, $keyword = null, $year = null, $paging_params = null) {
 		$params = array((int) $contextId);
 		if ($keyword) $params[] = $keyword;
+		if ($year) $params[] = $year;
 		$paging_sql = '';
 		if ($paging_params) $paging_sql = 'limit '.$paging_params['offset'].', '.$paging_params['count'];
 		$sql = 'SELECT distinct e.* FROM blog_entries e'
 			. ($keyword?', blog_keywords k, blog_entries_keywords b':'')
 			. ' WHERE e.context_id = ? '
 			. ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ?':'')
+                        . ($year?' AND year(e.date_posted) = ? ':'')
 			.' order by e.date_posted desc '
 			.$paging_sql;
 		$result = $this->retrieve($sql, $params);
 
 		return new DAOResultFactory($result, $this, '_fromRow', [], $sql, $params);
 	}
+
+
+	function getEntryYears($contextId, $keyword) {
+                $params = array((int) $contextId);
+                if ($keyword) $params[] = $keyword;		
+		$sql = 'SELECT distinct year(e.date_posted) as year FROM blog_entries e '
+			 . ($keyword?', blog_keywords k, blog_entries_keywords b':'')
+			. ' WHERE e.context_id = ? ' 
+                        . ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ?':'')
+			.' order by year desc';
+                $result = $this->retrieve($sql, $params);
+                $resultFactory = new DAOResultFactory($result, $this, '_getYear');
+                $years = $resultFactory->toArray();
+                return $years;
+	}
+
 
 	/**
 	 * Insert a blog entry.
@@ -124,6 +142,11 @@ class BlogEntryDAO extends DAO {
 	  return $row['COUNT(*)'];
 	}
 
+
+	function _getYear($row){
+	  return $row['year'];
+	}
+
 	/**
 	 * Return a new blog entry object from a given row.
 	 * @return blogEntry
@@ -168,13 +191,15 @@ class BlogEntryDAO extends DAO {
 		$this->setData('datePosted', $datetimePosted);
 	}
 
-	function getCountByContextId($contextId, $keyword){	
+	function getCountByContextId($contextId, $keyword, $year){	
 		$params = array((int) $contextId);
 		if ($keyword) $params[] = $keyword;
+                if ($year) $params[] = $year;
 		$sql = 'SELECT COUNT(*) FROM blog_entries e '
                         . ($keyword?', blog_keywords k, blog_entries_keywords b ':'')
                         . ' WHERE e.context_id = ? '
-                        . ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ? ':'');
+                        . ($keyword?' AND e.entry_id=b.entry_id AND k.keyword_id=b.keyword_id AND k.keyword = ? ':'')
+			. ($year?' AND year(e.date_posted) = ? ':'');
 		$result = $this->retrieve($sql, $params);
                 $resultFactory = new DAOResultFactory($result, $this, '_getCount', [], $sql, $params);
 		$returner = $resultFactory->next();
