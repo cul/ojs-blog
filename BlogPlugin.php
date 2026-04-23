@@ -1,14 +1,22 @@
 <?php
 
 /**
- * @file BlogPlugin.inc.php
+ * @file BlogPlugin.php
  *
  * @package plugins.generic.blog
  * @class BlogPlugin
  * Blog plugin main class
  */
 
-import('lib.pkp.classes.plugins.GenericPlugin');
+namespace APP\plugins\generic\blog;
+
+use PKP\plugins\GenericPlugin;
+use PKP\linkAction\LinkAction;
+use PKP\linkAction\request\RedirectAction;
+use APP\core\Application;
+use PKP\core\Registry;
+use PKP\plugins\Hook;
+use PKP\db\DAORegistry;
 
 class BlogPlugin extends GenericPlugin {
 	/**
@@ -45,22 +53,20 @@ class BlogPlugin extends GenericPlugin {
 		if (parent::register($category, $path, $mainContextId)) {
 			if ($this->getEnabled($mainContextId)) {
 				// Register the blog entry DAO.
-				import('plugins.generic.blog.classes.BlogEntryDAO');
-				import('plugins.generic.blog.classes.BlogKeywordDAO');
 				$blogEntryDao = new BlogEntryDAO();
 				$blogKeywordDao = new BlogKeywordDAO();
 				DAORegistry::registerDAO('BlogEntryDAO', $blogEntryDao);
 				DAORegistry::registerDAO('BlogKeywordDAO', $blogKeywordDao);
 
 
-				HookRegistry::register('Template::Settings::website', [$this, 'callbackShowWebsiteSettingsTabs']);
+				Hook::add('Template::Settings::website', [$this, 'callbackShowWebsiteSettingsTabs']);
 				// Intercept the LoadHandler hook to present
 				// blog entries when requested.
-				HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
+				Hook::add('LoadHandler', array($this, 'callbackHandleContent'));
 
 				// Register the components this plugin implements to
 				// permit administration of blog entries
-				HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
+				Hook::add('LoadComponentHandler', array($this, 'setupGridHandler'));
 			}
 			return true;
 		}
@@ -93,17 +99,13 @@ class BlogPlugin extends GenericPlugin {
 	 * @return boolean Hook handling status
 	 */
 	function callbackHandleContent($hookName, $args) {
-		$page = $args[0];
-		if ($page === 'blog') {
-			$this->import('BlogHandler');
-			define('HANDLER_CLASS', 'BlogHandler');
-			// Allow the blog handler to get the plugin object
-			blogHandler::setPlugin($this);
-			return true;
-		}
-		return false;
-	}
-
+    	$page = $args[0];
+    	if ($page === 'blog') {
+        	$args[3] = 'APP\plugins\generic\blog\BlogHandler';
+        	return true;
+    	}
+    return false;
+}
 
 	/**
 	 * Permit requests to the blog entry grid handler
@@ -126,25 +128,27 @@ class BlogPlugin extends GenericPlugin {
 	 */
 	function getActions($request, $actionArgs) {
 		$dispatcher = $request->getDispatcher();
-		import('lib.pkp.classes.linkAction.request.RedirectAction');
 		return array_merge(
-			$this->getEnabled()?array(
+			$this->getEnabled() ? array(
 				new LinkAction(
 					'settings',
 					new RedirectAction($dispatcher->url(
-						$request, ROUTE_PAGE,
-						null, 'management', 'settings', 'website',
-						array('uid' => uniqid()), // Force reload
-						'blog' // Anchor for tab
+						$request,
+						\PKP\core\PKPApplication::ROUTE_PAGE,
+						null,
+						'management',
+						'settings',
+						'website',
+						['uid' => uniqid()],
+						'blog'
 					)),
 					__('plugins.generic.blog.editAddContent'),
 					null
 				),
-			):array(),
+			) : array(),
 			parent::getActions($request, $actionArgs)
 		);
 	}
-
 	/**
 	 * Get the JavaScript URL for this plugin.
 	 */

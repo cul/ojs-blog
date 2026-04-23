@@ -13,6 +13,6 @@
  *
  */
 
-require_once('BlogPlugin.inc.php');
+require_once('BlogPlugin.php');
 return new BlogPlugin();
 
