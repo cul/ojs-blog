@@ -13,8 +13,8 @@
 <version>
 	<application>blog</application>
 	<type>plugins.generic</type>
-	<release>1.2.0.1</release>
-	<date>2014-09-24</date>
+	<release>1.3.0.0</release>
+	<date>2026-04-24</date>
 	<lazy-load>1</lazy-load>
-	<class>BlogPlugin</class>
+	<class>APP\plugins\generic\blog\BlogPlugin</class>
 </version>

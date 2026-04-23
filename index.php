@@ -13,6 +13,5 @@
  *
  */
 
-require_once('BlogPlugin.php');
-return new BlogPlugin();
 
+return new APP\plugins\generic\blog\BlogPlugin();
