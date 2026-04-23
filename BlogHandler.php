@@ -1,17 +1,23 @@
 <?php
 
 /**
- * @file BlogHandler.inc.php
+ * @file BlogHandler.php
  *
  * @package plugins.generic.blog
  * @class BlogHandler
  * Find blog entries and display them when requested.
  */
 
-import('classes.handler.Handler');
+<?php
 
+namespace APP\plugins\generic\blog;
 
-class BlogHandler extends Handler {
+use APP\core\Request;
+use PKP\handler\PKPHandler;
+use PKP\db\DAORegistry;
+use PKP\template\PKPTemplateManager;
+
+class BlogHandler extends PKPHandler {
 	/** @var blogPlugin The blog plugin */
 	static $plugin;
 
@@ -41,19 +47,12 @@ class BlogHandler extends Handler {
 	 * @param $request PKPRequest Request object.
 	 */
 	function index($args, $request) {
-		$keyword = null;
-		if(isset($_GET['keyword'])){
-			$keyword=$_GET['keyword'];
-		}
-                $year = null;
-                if(isset($_GET['year'])){
-                        $year=$_GET['year'];
-                }
-
+		$keyword = $request->getUserVar('keyword');
+		$year    = $request->getUserVar('year');
 
 		$templateMgr = TemplateManager::getManager($request);
 		$context = $request->getContext();
-		$contextId = $context?$context->getId():CONTEXT_ID_NONE;
+		$contextId = $context ? $context->getId() : PKPApplication::CONTEXT_ID_NONE;
 		$blogEntryDao = DAORegistry::getDAO('BlogEntryDAO');
 		$blogKeywordDao = DAORegistry::getDAO('BlogKeywordDAO');
 
