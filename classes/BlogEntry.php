@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file classes/BlogEntry.inc.php
+ * @file classes/BlogEntry.php
  *
  *
  * @package plugins.generic.blog

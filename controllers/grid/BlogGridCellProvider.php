@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file controllers/grid/BlogGridCellProvider.inc.php
+ * @file controllers/grid/BlogGridCellProvider.php
  *
  * Copyright (c) 2014-2019 Simon Fraser University
  * Copyright (c) 2000-2019 John Willinsky

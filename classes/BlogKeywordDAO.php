@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file classes/blogKeywordDAO.inc.php
+ * @file classes/blogKeywordDAO.php
  *
  *
  * @package plugins.generic.blog

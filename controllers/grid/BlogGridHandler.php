@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file controllers/grid/BlogGridHandler.inc.php
+ * @file controllers/grid/BlogGridHandler.php
  *
  * @class BlogGridHandler
  * @ingroup controllers_grid_blog

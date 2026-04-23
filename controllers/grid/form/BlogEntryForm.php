@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file controllers/grid/form/BlogEntryForm.inc.php
+ * @file controllers/grid/form/BlogEntryForm.php
  *
  *
  * @class BlogEntryForm

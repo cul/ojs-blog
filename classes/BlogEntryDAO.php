@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file classes/BlogEntryDAO.inc.php
+ * @file classes/BlogEntryDAO.php
  *
  *
  * @package plugins.generic.blog
