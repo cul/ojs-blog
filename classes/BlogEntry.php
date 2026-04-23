@@ -3,120 +3,71 @@
 /**
  * @file classes/BlogEntry.php
  *
- *
  * @package plugins.generic.blog
  * @class BlogEntry
  * Data object representing a blog entry.
  */
 
+namespace APP\plugins\generic\blog\classes;
+
+use PKP\core\DataObject;
+
 class BlogEntry extends DataObject {
 
-	//
-	// Get/set methods
-	//
+    public function getContextId(): ?int {
+        return $this->getData('contextId');
+    }
 
-	/**
-	 * Get context ID
-	 * @return string
-	 */
-	function getContextId(){
-		return $this->getData('contextId');
-	}
+    public function setContextId(int $contextId): void {
+        $this->setData('contextId', $contextId);
+    }
 
-	/**
-	 * Set context ID
-	 * @param $contextId int
-	 */
-	function setContextId($contextId) {
-		return $this->setData('contextId', $contextId);
-	}
+    public function getTitle(): ?string {
+        return $this->getData('title');
+    }
 
+    public function setTitle(string $title): void {
+        $this->setData('title', $title);
+    }
 
-	/**
-	 * Set entry title
-	 * @param string string
-	 */
-	function setTitle($title) {
-		return $this->setData('title', $title);
-	}
+    public function getByline(): ?string {
+        return $this->getData('byline');
+    }
 
-	/**
-	 * Get entry title
-	 * @return string
-	 */
-	function getTitle() {
-		return $this->getData('title');
-	}
+    public function setByline(string $byline): void {
+        $this->setData('byline', $byline);
+    }
 
-	/**
-	 * Set entry byline
-	 * @param string string
-	 */
-	function setByline($byline){
-		return $this->setData('byline',$byline);
-	}
+    public function getContent(): ?string {
+        return $this->getData('content');
+    }
 
-	/**
-	 * Get entry byline
-	 * @return string
-	 */
-	function getByline(){
-		return $this->getData('byline');
-	}
+    public function setContent(string $content): void {
+        $this->setData('content', $content);
+    }
 
+    public function getAbbreviatedContent(): string {
+        return implode(' ', array_slice(explode(' ', $this->getData('content')), 0, 25));
+    }
 
-	/**
-	 * Set entry content
-	 * @param $content string
-	 */
-	function setContent($content) {
-		return $this->setData('content', $content);
-	}
+    public function getKeywords(?string $locale = null): mixed {
+        $keywords = $this->getData('keywords');
+        if ($locale) {
+            return $keywords[$locale] ?? null;
+        }
+        return $keywords;
+    }
 
-	/**
-	 * Get entry content
-	 * @return string
-	 */
-	function getContent() {
-		return $this->getData('content');
-	}
+    public function setKeywords(array $keywords): void {
+        $this->setData('keywords', $keywords);
+    }
 
-	function getAbbreviatedContent(){
-		return implode(' ', array_slice(explode(' ', $this->getData('content')), 0, 25));
-	}
+    public function getDatePosted(): ?string {
+        $date = $this->getData('datePosted');
+        return $date ? date('Y-m-d', strtotime($date)) : null;
+    }
 
-	/**
-	 * Set entry keywords
-	 * @param $keywords array
-	 */
-	function setKeywords($keywords) {
-		return $this->setData('keywords', $keywords);
-	}
-
-	/**
-	 * Get entry keywords
-	 * @return string
-	 */
-	function getKeywords() {
-		return $this->getData('keywords')['en_US'];
-	}
-
-
-	/**
-	 * Get blog entry posted date.
-	 * @return date (YYYY-MM-DD)
-	 */
-	function getDatePosted() {
-		return date('Y-m-d', strtotime($this->getData('datePosted')));
-	}
-
-	/**
-	 * Set blog entry posted date.
-	 * @param $datePosted date (YYYY-MM-DD)
-	 */
-	function setDatePosted($datePosted) {
-		$this->setData('datePosted', $datePosted);
-	}
-
+    public function setDatePosted(string $datePosted): void {
+        $this->setData('datePosted', $datePosted);
+    }
 }
-
