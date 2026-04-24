@@ -11,6 +11,7 @@
 namespace APP\plugins\generic\blog\classes;
 
 use PKP\db\DAO;
+use PKP\db\DAOResultFactory;
 
 class BlogKeywordDAO extends DAO {
 
@@ -18,7 +19,7 @@ class BlogKeywordDAO extends DAO {
 	 * Get the insert ID for the last inserted blog Keyword.
 	 * @return int
 	 */
-	function getInsertId() {
+	function getInsertId(): int {
 		return $this->_getInsertId('blog_keywords', 'keyword_id');
 	}
 
@@ -93,29 +94,24 @@ class BlogKeywordDAO extends DAO {
 		}
 	}
 
+	function getBlogKeywords($contextId, $year = null) {
+        $kw = [];
+        $sql = 'SELECT distinct k.keyword as keyword FROM blog_keywords k, blog_entries_keywords b, blog_entries e WHERE e.context_id = ? and k.keyword_id=b.keyword_id and b.entry_id=e.entry_id '
+            . ($year ? ' and year(e.date_posted) = ? ' : '')
+            . ' order by k.keyword';
+            
+        $params = [(int) $contextId];
+        if ($year) $params[] = (int) $year;
+        
+        $result = $this->retrieve($sql, $params);
+        $resultFactory = new DAOResultFactory($result, $this, 'getKeyword', [], $sql, $params);
+        
+        while (!$resultFactory->eof()) {
+            $kw[] = $resultFactory->next();
+        }
+        return $kw;
+    }
 
-	function getBlogKeywords($contextId, $year){
-			$kw =[];
-			$keywords = [];
-			$sql = 'SELECT distinct k.keyword as keyword FROM blog_keywords k, blog_entries_keywords b, blog_entries e WHERE e.context_id = ? and k.keyword_id=b.keyword_id and b.entry_id=e.entry_id '
-			. ($year?' and year(e.date_posted)= ? ':'')
-			.'  order by k.keyword';
-			$params = [$contextId];
-                	if ($year) $params[] = $year;
-                        $result = $this->retrieve(
-                                $sql,
-                                $params
-                        );
-                        $resultFactory = new DAOResultFactory($result, $this, 'getKeyword', [], $sql, $params);
-                        if ($resultFactory->getCount() != 0) {
-                                while (!$resultFactory->eof()) {
-                                        $keyword = $resultFactory->next();
-                                        $kw[] = $keyword;
-                                }
-                        }
-                        //$keywords['en_US'] = $kw;
-			return $kw;
-	} 
 
 	function getBlogKeywordsAsJSON(){
 		$contextId = \PKP\core\PKPApplication::get()->getRequest()->getContext()->getId();

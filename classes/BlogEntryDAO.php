@@ -15,6 +15,8 @@ namespace APP\plugins\generic\blog\classes;
 use PKP\db\DAO;
 use APP\plugins\generic\blog\classes\BlogEntry;
 use APP\plugins\generic\blog\classes\BlogKeywordDAO;
+use PKP\core\DataObject;
+use PKP\db\DAOResultFactory;
 
 class BlogEntryDAO extends DAO {
 
@@ -80,7 +82,7 @@ class BlogEntryDAO extends DAO {
 	 * @param $blogEntry BlogEntry
 	 * @return int Inserted blogEntryID
 	 */
-	function insertObject($blogEntry) {
+	function insertObject($blogEntry): int {
 		$valArray = [(int) $blogEntry->getContextId(), $blogEntry->getTitle(), $blogEntry->getContent(), $blogEntry->getByline(), $blogEntry->getDatePosted()];
 
 		$this->update(
@@ -154,7 +156,7 @@ class BlogEntryDAO extends DAO {
 	 * Return a new blog entry object from a given row.
 	 * @return blogEntry
 	 */
-	function _fromRow($row) {
+	function _fromRow(array $row): DataObject {
 		$blogEntry = $this->newDataObject();
 		$blogEntry->setId($row['entry_id']);
 		$blogEntry->setContextId($row['context_id']);
@@ -172,10 +174,9 @@ class BlogEntryDAO extends DAO {
 	 * Get the insert ID for the last inserted blog entry.
 	 * @return int
 	 */
-	function getInsertId() {
+	function getInsertId(): int {
 		return $this->_getInsertId('blog_entries', 'entry_id');
 	}
-
 
 
 	/**
