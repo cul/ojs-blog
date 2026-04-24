@@ -48,50 +48,42 @@ class BlogPlugin extends GenericPlugin {
 		return (isset($products['tinymce']));
 	}
 
-	/**
-	 * @copydoc Plugin::register()
-	 */
-	function register($category, $path, $mainContextId = null) {
-		if (parent::register($category, $path, $mainContextId)) {
-			if ($this->getEnabled($mainContextId)) {
-				// Register the blog entry DAO.
-				$blogEntryDao = new BlogEntryDAO();
-				$blogKeywordDao = new BlogKeywordDAO();
-				DAORegistry::registerDAO('BlogEntryDAO', $blogEntryDao);
-				DAORegistry::registerDAO('BlogKeywordDAO', $blogKeywordDao);
+	public function register($category, $path, $mainContextId = null)
+	{
+		if (!parent::register($category, $path, $mainContextId)) {
+			return false;
+		}
 
-
-				Hook::add('Template::Settings::website', [$this, 'callbackShowWebsiteSettingsTabs']);
-				// Intercept the LoadHandler hook to present
-				// blog entries when requested.
-				Hook::add('LoadHandler', array($this, 'callbackHandleContent'));
-
-				// Register the components this plugin implements to
-				// permit administration of blog entries
-				Hook::add('LoadComponentHandler', array($this, 'setupGridHandler'));
-			}
+		if (!$this->getEnabled($mainContextId)) {
 			return true;
 		}
-		return false;
+
+		DAORegistry::registerDAO('BlogEntryDAO', new BlogEntryDAO());
+		DAORegistry::registerDAO('BlogKeywordDAO', new BlogKeywordDAO());
+
+		// Hook::add('Template::Settings::website', [$this, 'callbackShowWebsiteSettingsTabs']);
+		// Hook::add('LoadHandler', [$this, 'callbackHandleContent']);
+		// Hook::add('LoadComponentHandler', [$this, 'setupGridHandler']);
+		Hook::add('Template::Settings::website', $this->callbackShowWebsiteSettingsTabs(...));
+		Hook::add('LoadHandler', $this->callbackHandleContent(...));
+		Hook::add('LoadComponentHandler', $this->setupGridHandler(...));
+
+		return true;
 	}
 
-	/**
-	 * Extend the website settings tabs to include the blog
-	 * @param $hookName string The name of the invoked hook
-	 * @param $args array Hook parameters
-	 * @return boolean Hook handling status
-	 */
-	function callbackShowWebsiteSettingsTabs($hookName, $args) {
-                $templateMgr = $args[1];
-                $output =& $args[2];
-                $request =& Registry::get('request');
-                $dispatcher = $request->getDispatcher();
+	public function callbackShowWebsiteSettingsTabs($hookName, $args)
+	{
+error_log('BLOG TAB HOOK FIRED');
+		$templateMgr = $args[1];
+		$output = &$args[2];
 
-                $output .= $templateMgr->fetch($this->getTemplateResource('blogTab.tpl'));
+		$request = Application::get()->getRequest();
 
-                // Permit other plugins to continue interacting with this hook
-                return false;
+		$output .= $templateMgr->fetch(
+			$this->getTemplateResource('blogTab.tpl')
+		);
 
+		return false;
 	}
 
 	/**
@@ -114,16 +106,18 @@ class BlogPlugin extends GenericPlugin {
 	 * @param $hookName string The name of the hook being invoked
 	 * @param $args array The parameters to the invoked hook
 	 */
-	function setupGridHandler($hookName, $params) {
-		$component =& $params[0];
+	public function setupGridHandler($hookName, $params)
+	{
+		$component = &$params[0];
+		$componentInstance = &$params[2];
+		
 		if ($component == 'plugins.generic.blog.controllers.grid.BlogGridHandler') {
-			// Allow the blog handler to get the plugin object
-			import($component);
-			BlogGridHandler::setPlugin($this);
+			$componentInstance = new \APP\plugins\generic\blog\controllers\grid\BlogGridHandler($this);
 			return true;
 		}
 		return false;
 	}
+
 
 	/**
 	 * @copydoc Plugin::getActions()
