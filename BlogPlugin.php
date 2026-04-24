@@ -17,6 +17,8 @@ use APP\core\Application;
 use PKP\core\Registry;
 use PKP\plugins\Hook;
 use PKP\db\DAORegistry;
+use APP\plugins\generic\blog\classes\BlogEntryDAO;
+use APP\plugins\generic\blog\classes\BlogKeywordDAO;
 
 class BlogPlugin extends GenericPlugin {
 	/**
@@ -41,7 +43,7 @@ class BlogPlugin extends GenericPlugin {
 	 * @return boolean True iff TinyMCE is installed.
 	 */
 	function isTinyMCEInstalled() {
-		$application = Application::getApplication();
+		$application = \PKP\core\PKPApplication::get();
 		$products = $application->getEnabledProducts('plugins.generic');
 		return (isset($products['tinymce']));
 	}

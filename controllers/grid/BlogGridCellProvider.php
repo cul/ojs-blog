@@ -12,9 +12,10 @@
  *
  * @brief Class for a cell provider to display information about blog entries
  */
+namespace APP\plugins\generic\blog\controllers\grid;
 
-import('lib.pkp.classes.controllers.grid.GridCellProvider');
-import('lib.pkp.classes.linkAction.request.RedirectAction');
+use PKP\controllers\grid\GridCellProvider;
+use PKP\linkAction\request\RedirectAction;
 
 class BlogGridCellProvider extends GridCellProvider {
 

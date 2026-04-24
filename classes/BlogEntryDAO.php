@@ -9,9 +9,12 @@
  * Operations for retrieving and modifying blog objects.
  */
 
-import('lib.pkp.classes.db.DAO');
-import('plugins.generic.blog.classes.BlogEntry');
-import('plugins.generic.blog.classes.BlogKeywordDAO');
+namespace APP\plugins\generic\blog\classes;
+
+
+use PKP\db\DAO;
+use APP\plugins\generic\blog\classes\BlogEntry;
+use APP\plugins\generic\blog\classes\BlogKeywordDAO;
 
 class BlogEntryDAO extends DAO {
 

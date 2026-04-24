@@ -13,7 +13,9 @@
  * @brief Functional tests for the static pages plugin.
  */
 
-import('lib.pkp.tests.WebTestCase');
+namespace APP\plugins\generic\blog\tests\functional;
+
+use PKP\tests\WebTestCase;
 
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;

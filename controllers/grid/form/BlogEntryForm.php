@@ -11,7 +11,10 @@
  *
  */
 
-import('lib.pkp.classes.form.Form');
+namespace APP\plugins\generic\blog\controllers\grid\form;
+
+
+use PKP\form\Form;
 
 class BlogEntryForm extends Form {
 	/** @var int Context (press / journal) ID */

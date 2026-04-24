@@ -8,10 +8,18 @@
  *
  * @brief Handle blog entry grid requests.
  */
+namespace APP\plugins\generic\blog\controllers\grid;
 
-import('lib.pkp.classes.controllers.grid.GridHandler');
-import('plugins.generic.blog.controllers.grid.BlogGridRow');
-import('plugins.generic.blog.controllers.grid.BlogGridCellProvider');
+
+use PKP\controllers\grid\GridHandler;
+use APP\plugins\generic\blog\controllers\grid\BlogGridRow;
+use APP\plugins\generic\blog\controllers\grid\BlogGridCellProvider;
+use PKP\security\authorization\ContextAccessPolicy;
+use PKP\linkAction\request\AjaxModal;
+use PKP\form\Form;
+use APP\plugins\generic\blog\controllers\grid\form\BlogEntryForm;
+use APP\plugins\generic\blog\controllers\grid\form\BlogEntryForm;
+
 
 class BlogGridHandler extends GridHandler {
 	/** @var BlogPlugin The blog plugin */
@@ -44,7 +52,6 @@ class BlogGridHandler extends GridHandler {
 	 * @copydoc PKPHandler::authorize()
 	 */
 	function authorize($request, &$args, $roleAssignments) {
-		import('lib.pkp.classes.security.authorization.ContextAccessPolicy');
 		$this->addPolicy(new ContextAccessPolicy($request, $roleAssignments));
 		return parent::authorize($request, $args, $roleAssignments);
 	}
@@ -66,7 +73,6 @@ class BlogGridHandler extends GridHandler {
 
 		// Add grid-level actions
 		$router = $request->getRouter();
-		import('lib.pkp.classes.linkAction.request.AjaxModal');
 		$this->addAction(
 			new LinkAction(
 				'addBlogEntry',
@@ -112,7 +118,6 @@ class BlogGridHandler extends GridHandler {
 	 */
 	function index($args, $request) {
 		$context = $request->getContext();
-		import('lib.pkp.classes.form.Form');
 		$form = new Form(self::$plugin->getTemplateResource('blog.tpl'));
 		return new JSONMessage(true, $form->fetch($request));
 	}
@@ -140,7 +145,6 @@ class BlogGridHandler extends GridHandler {
 		$this->setupTemplate($request);
 
 		// Create and present the edit form
-		import('plugins.generic.blog.controllers.grid.form.BlogEntryForm');
 		$blogPlugin = self::$plugin;
 		$blogEntryForm = new BlogEntryForm(self::$plugin, $context->getId(), $blogEntryId);
 		$blogEntryForm->initData();
@@ -159,7 +163,6 @@ class BlogGridHandler extends GridHandler {
 		$this->setupTemplate($request);
 
 		// Create and populate the form
-		import('plugins.generic.blog.controllers.grid.form.BlogEntryForm');
 		$blogPlugin = self::$plugin;
 		$blogEntryForm = new BlogEntryForm(self::$plugin, $context->getId(), $blogEntryId);
 		$blogEntryForm->readInputData();

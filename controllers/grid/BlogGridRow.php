@@ -9,7 +9,12 @@
  * @brief Handle custom blocks grid row requests.
  */
 
-import('lib.pkp.classes.controllers.grid.GridRow');
+namespace APP\plugins\generic\blog\controllers\grid;
+
+
+use PKP\controllers\grid\GridRow;
+use PKP\linkAction\request\AjaxModal;
+use PKP\linkAction\request\RemoteActionConfirmationModal;
 
 class BlogGridRow extends GridRow {
 
@@ -27,7 +32,6 @@ class BlogGridRow extends GridRow {
 			$router = $request->getRouter();
 
 			// Create the "edit blog entry" action
-			import('lib.pkp.classes.linkAction.request.AjaxModal');
 			$this->addAction(
 				new LinkAction(
 					'editBlogEntry',
@@ -42,7 +46,6 @@ class BlogGridRow extends GridRow {
 			);
 
 			// Create the "delete blog entry" action
-			import('lib.pkp.classes.linkAction.request.RemoteActionConfirmationModal');
 			$this->addAction(
 				new LinkAction(
 					'delete',

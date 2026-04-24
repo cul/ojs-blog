@@ -8,8 +8,9 @@
  * @class blogKeywordDAO
  * Operations for retrieving and modifying blog keyword objects.
  */
+namespace APP\plugins\generic\blog\classes;
 
-import('lib.pkp.classes.db.DAO');
+use PKP\db\DAO;
 
 class BlogKeywordDAO extends DAO {
 
@@ -117,7 +118,7 @@ class BlogKeywordDAO extends DAO {
 	} 
 
 	function getBlogKeywordsAsJSON(){
-		$contextId = Application::getApplication()->getRequest()->getContext()->getId();
+		$contextId = \PKP\core\PKPApplication::get()->getRequest()->getContext()->getId();
 		$kw = $this->getBlogKeywords($contextId);
 	}
 
