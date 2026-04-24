@@ -129,21 +129,24 @@ class BlogPlugin extends GenericPlugin {
 	 * @copydoc Plugin::getActions()
 	 */
 	function getActions($request, $actionArgs) {
-		$dispatcher = $request->getDispatcher();
+	$dispatcher = $request->getDispatcher();
+
 		return array_merge(
 			$this->getEnabled() ? array(
 				new LinkAction(
 					'settings',
-					new RedirectAction($dispatcher->url(
-						$request,
-						\PKP\core\PKPApplication::ROUTE_PAGE,
-						null,
-						'management',
-						'settings',
-						'website',
-						['uid' => uniqid()],
-						'blog'
-					)),
+					new RedirectAction(
+						$dispatcher->url(
+							$request,
+							\PKP\core\PKPApplication::ROUTE_PAGE,
+							null,
+							'management',
+							'settings',
+							['website'],
+							['uid' => uniqid()],
+							'blog'
+						)
+					),
 					__('plugins.generic.blog.editAddContent'),
 					null
 				),
@@ -151,6 +154,8 @@ class BlogPlugin extends GenericPlugin {
 			parent::getActions($request, $actionArgs)
 		);
 	}
+
+
 	/**
 	 * Get the JavaScript URL for this plugin.
 	 */

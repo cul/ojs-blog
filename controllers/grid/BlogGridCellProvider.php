@@ -15,7 +15,6 @@
 namespace APP\plugins\generic\blog\controllers\grid;
 
 use PKP\controllers\grid\GridCellProvider;
-use PKP\linkAction\request\RedirectAction;
 
 class BlogGridCellProvider extends GridCellProvider {
 
