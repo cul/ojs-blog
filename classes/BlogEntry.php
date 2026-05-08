@@ -50,7 +50,7 @@ class BlogEntry extends DataObject {
         return implode(' ', array_slice(explode(' ', $this->getData('content')), 0, 25));
     }
 
-    public function getKeywords(?string $locale = null): mixed {
+    public function getKeywords(?string $locale = null) {
         $keywords = $this->getData('keywords');
         if ($locale) {
             return $keywords[$locale] ?? null;

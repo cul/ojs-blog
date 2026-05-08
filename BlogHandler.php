@@ -8,22 +8,17 @@
  * Find blog entries and display them when requested.
  */
 
-<?php
-
 namespace APP\plugins\generic\blog;
 
 use APP\core\Request;
 use PKP\handler\PKPHandler;
 use PKP\db\DAORegistry;
-use PKP\template\PKPTemplateManager;
+use APP\template\TemplateManager;
+use PKP\core\PKPApplication;
 
 class BlogHandler extends PKPHandler {
 	/** @var blogPlugin The blog plugin */
-	static $plugin;
-
-	/** @var blogEntry, the entry to view */
-	static $blogEntry;
-
+	static protected $plugin;
 
 	/**
 	 * Provide the blog plugin to the handler.
@@ -31,14 +26,6 @@ class BlogHandler extends PKPHandler {
 	 */
 	static function setPlugin($plugin) {
 		self::$plugin = $plugin;
-	}
-
-	/**
-	 * Set a blog entry to view.
-	 * @param $blogEntry BlogEntry
-	 */
-	static function setEntry($blogEntry) {
-		self::$blogEntry = $blogEntry;
 	}
 
 	/**
@@ -92,7 +79,7 @@ class BlogHandler extends PKPHandler {
                         $templateMgr->assign('selectedYear', $year);
                 }
 
-		$templateMgr->display(self::$plugin->getTemplateResource('index.tpl'));
+		$templateMgr->display($this->plugin->getTemplateResource('index.tpl'));
 	}
 
 	/**

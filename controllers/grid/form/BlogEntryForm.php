@@ -15,6 +15,11 @@ namespace APP\plugins\generic\blog\controllers\grid\form;
 
 
 use PKP\form\Form;
+use PKP\form\validation\FormValidatorPost;
+use PKP\form\validation\FormValidatorCSRF;
+use PKP\form\validation\FormValidator;
+use PKP\db\DAORegistry;
+use APP\template\TemplateManager;
 
 class BlogEntryForm extends Form {
 	/** @var int Context (press / journal) ID */

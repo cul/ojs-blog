@@ -10,150 +10,125 @@
 
 namespace APP\plugins\generic\blog;
 
+use APP\core\Application;
 use PKP\plugins\GenericPlugin;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\RedirectAction;
-use APP\core\Application;
+use APP\template\TemplateManager;
 use PKP\core\Registry;
 use PKP\plugins\Hook;
 use PKP\db\DAORegistry;
 use APP\plugins\generic\blog\classes\BlogEntryDAO;
 use APP\plugins\generic\blog\classes\BlogKeywordDAO;
+use \APP\plugins\generic\blog\controllers\grid\BlogGridHandler;
+use \APP\plugins\generic\blog\BlogHandler;
 
 class BlogPlugin extends GenericPlugin {
-	/**
-	 * @copydoc Plugin::getDisplayName()
-	 */
-	function getDisplayName() {
+    
+	public function getDisplayName() {
 		return __('plugins.generic.blog.displayName');
 	}
 
-	/**
-	 * @copydoc Plugin::getDescription()
-	 */
-	function getDescription() {
+	public function getDescription() {
 		$description = __('plugins.generic.blog.description');
-		if (!$this->isTinyMCEInstalled())
+		if (!$this->isTinyMCEInstalled()) {
 			$description .= __('plugins.generic.blog.requirement.tinymce');
+		}
 		return $description;
 	}
 
-	/**
-	 * Check whether or not the TinyMCE plugin is installed.
-	 * @return boolean True iff TinyMCE is installed.
-	 */
-	function isTinyMCEInstalled() {
-		$application = \PKP\core\PKPApplication::get();
+	public function isTinyMCEInstalled() {
+		$application = Application::get();
 		$products = $application->getEnabledProducts('plugins.generic');
 		return (isset($products['tinymce']));
 	}
 
 	public function register($category, $path, $mainContextId = null)
 	{
-		if (!parent::register($category, $path, $mainContextId)) {
-			return false;
-		}
+		if (parent::register($category, $path, $mainContextId)) {
+			if ($this->getEnabled($mainContextId)) {
+				DAORegistry::registerDAO('BlogEntryDAO', new BlogEntryDAO());
+				DAORegistry::registerDAO('BlogKeywordDAO', new BlogKeywordDAO());
 
-		if (!$this->getEnabled($mainContextId)) {
+				Hook::add('Template::Settings::website', $this->callbackShowWebsiteSettingsTabs(...));
+				Hook::add('LoadHandler', $this->callbackHandleContent(...));
+				Hook::add('LoadComponentHandler', $this->setupGridHandler(...));
+			}
 			return true;
 		}
-
-		DAORegistry::registerDAO('BlogEntryDAO', new BlogEntryDAO());
-		DAORegistry::registerDAO('BlogKeywordDAO', new BlogKeywordDAO());
-
-		// Hook::add('Template::Settings::website', [$this, 'callbackShowWebsiteSettingsTabs']);
-		// Hook::add('LoadHandler', [$this, 'callbackHandleContent']);
-		// Hook::add('LoadComponentHandler', [$this, 'setupGridHandler']);
-		Hook::add('Template::Settings::website', $this->callbackShowWebsiteSettingsTabs(...));
-		Hook::add('LoadHandler', $this->callbackHandleContent(...));
-		Hook::add('LoadComponentHandler', $this->setupGridHandler(...));
-
-		return true;
+		return false;
 	}
 
 	public function callbackShowWebsiteSettingsTabs($hookName, $args)
 	{
-error_log('BLOG TAB HOOK FIRED');
 		$templateMgr = $args[1];
 		$output = &$args[2];
+                $request = & Registry::get('request');
+                $dispatcher = $request->getDispatcher();
 
-		$request = Application::get()->getRequest();
-
-		$output .= $templateMgr->fetch(
-			$this->getTemplateResource('blogTab.tpl')
-		);
-
+		$output .= $templateMgr->fetch($this->getTemplateResource('blogTab.tpl'));
 		return false;
 	}
 
-	/**
-	 * Declare the handler function to process the actual entry
-	 * @param $hookName string The name of the invoked hook
-	 * @param $args array Hook parameters
-	 * @return boolean Hook handling status
-	 */
-	function callbackHandleContent($hookName, $args) {
-    	$page = $args[0];
-    	if ($page === 'blog') {
-        	$args[3] = 'APP\plugins\generic\blog\BlogHandler';
-        	return true;
-    	}
-    return false;
-}
+	public function callbackHandleContent($hookName, $args)
+	{
+		$page = &$args[0];
+		$handler = &$args[3];
 
-	/**
-	 * Permit requests to the blog entry grid handler
-	 * @param $hookName string The name of the hook being invoked
-	 * @param $args array The parameters to the invoked hook
-	 */
+		if ($page === 'blog') {
+			$handler = new \APP\plugins\generic\blog\BlogHandler();
+			$handler->setPlugin($this);
+			return true;
+		}
+		return false;
+	}
+
 	public function setupGridHandler($hookName, $params)
 	{
 		$component = &$params[0];
 		$componentInstance = &$params[2];
 		
 		if ($component == 'plugins.generic.blog.controllers.grid.BlogGridHandler') {
-			$componentInstance = new \APP\plugins\generic\blog\controllers\grid\BlogGridHandler($this);
+			$componentInstance = new \APP\plugins\generic\blog\controllers\grid\BlogGridHandler();
+			\APP\plugins\generic\blog\controllers\grid\BlogGridHandler::setPlugin($this);
 			return true;
 		}
 		return false;
 	}
 
-
-	/**
-	 * @copydoc Plugin::getActions()
-	 */
-	function getActions($request, $actionArgs) {
-	$dispatcher = $request->getDispatcher();
-
+	public function getActions($request, $actionArgs) {
+		$dispatcher = $request->getDispatcher();
 		return array_merge(
-			$this->getEnabled() ? array(
+			$this->getEnabled() ? [
 				new LinkAction(
 					'settings',
-					new RedirectAction(
-						$dispatcher->url(
-							$request,
-							\PKP\core\PKPApplication::ROUTE_PAGE,
-							null,
-							'management',
-							'settings',
-							['website'],
-							['uid' => uniqid()],
-							'blog'
-						)
-					),
+					new RedirectAction($dispatcher->url(
+						$request,
+						Application::ROUTE_PAGE,
+						null,
+						'management',
+						'settings',
+						['website'],
+						['uid' => uniqid()],
+						'blog' 
+					)),
 					__('plugins.generic.blog.editAddContent'),
 					null
 				),
-			) : array(),
+			] : [],
 			parent::getActions($request, $actionArgs)
 		);
 	}
 
-
 	/**
-	 * Get the JavaScript URL for this plugin.
-	 */
-	function getJavaScriptURL($request) {
-		return $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js';
-	}
+     * Get the JavaScript URL for this plugin.
+     */
+    public function getJavaScriptURL($request)
+    {
+        return $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js';
+    }
+}
+
+if (!PKP_STRICT_MODE) {
+    class_alias('\APP\plugins\generic\blog\BlogPlugin', '\BlogPlugin');
 }

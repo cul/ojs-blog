@@ -16,9 +16,13 @@ use APP\plugins\generic\blog\controllers\grid\BlogGridRow;
 use APP\plugins\generic\blog\controllers\grid\BlogGridCellProvider;
 use PKP\security\authorization\ContextAccessPolicy;
 use PKP\linkAction\request\AjaxModal;
+use PKP\linkAction\LinkAction;
 use PKP\form\Form;
 use APP\plugins\generic\blog\controllers\grid\form\BlogEntryForm;
-use APP\plugins\generic\blog\controllers\grid\form\BlogEntryForm;
+use PKP\controllers\grid\GridColumn;
+use PKP\controllers\JSONMessage;
+use PKP\db\DAORegistry;
+use PKP\db\DAO;
 
 
 class BlogGridHandler extends GridHandler {
